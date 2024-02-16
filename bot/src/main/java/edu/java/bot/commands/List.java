@@ -6,6 +6,19 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.bot.UpdatesProcessor;
 
 public final class List implements Command {
+    private String getLinks() {
+        StringBuilder links = new StringBuilder();
+        for (var link : UpdatesProcessor.getFOLLOWING_LINKS()) {
+            String cur = "`" + link + "`\n";
+            links.append(cur);
+        }
+
+        if (links.isEmpty()) {
+            links.append("You aren't following something!");
+        }
+
+        return links.toString();
+    }
     @Override
     public String command() {
         return null;
@@ -18,16 +31,7 @@ public final class List implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        StringBuilder links = new StringBuilder();
-        for (var link : UpdatesProcessor.getFOLLOWING_LINKS()) {
-            String cur = "`" + link + "`\n";
-            links.append(cur);
-        }
-
-        if (links.isEmpty()) {
-            links.append("You aren't following something!");
-        }
-        return new SendMessage(update.message().chat().id(), links.toString())
+        return new SendMessage(update.message().chat().id(), getLinks())
             .parseMode(ParseMode.Markdown);
     }
 }

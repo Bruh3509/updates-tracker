@@ -17,7 +17,9 @@ public final class Start implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        return new SendMessage(update.message().chat().id(), "Hello!")
+        // there will be logic for registration
+        return new SendMessage(update.message().chat().id(), String.format("Hello, %s!",
+                update.message().chat().firstName()))
             .parseMode(ParseMode.Markdown);
     }
 }

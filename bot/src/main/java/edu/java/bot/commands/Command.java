@@ -12,7 +12,7 @@ public sealed interface Command permits Start, Help, Track, Untrack, List, Unkno
         LIST,
         UNKNOWN
     }
-    String command();
-    String description();
+    String command(); // TODO
+    String description(); // TODO
     SendMessage handle(Update update);
 }
