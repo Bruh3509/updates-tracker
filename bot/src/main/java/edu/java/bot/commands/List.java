@@ -20,14 +20,13 @@ public final class List implements Command {
         return links.toString();
     }
 
-    @Override
     public String command() {
-        return null;
+        return "/list";
     }
 
     @Override
     public String description() {
-        return null;
+        return "List of tracking links";
     }
 
     @Override

@@ -19,12 +19,12 @@ public final class Untrack implements Command {
 
     @Override
     public String command() {
-        return null;
+        return "/untrack";
     }
 
     @Override
     public String description() {
-        return null;
+        return "Stop tracking the link";
     }
 
     @Override

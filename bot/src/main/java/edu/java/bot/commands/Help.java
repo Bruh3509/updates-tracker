@@ -14,12 +14,12 @@ public final class Help implements Command {
 
     @Override
     public String command() {
-        return null;
+        return "/help";
     }
 
     @Override
     public String description() {
-        return null;
+        return "List of commands";
     }
 
     @Override

@@ -7,17 +7,17 @@ import edu.java.bot.apiwrapper.UpdateWrapper;
 public final class Start implements Command {
     @Override
     public String command() {
-        return null;
+        return "/start";
     }
 
     @Override
     public String description() {
-        return null;
+        return "Starts the bot";
     }
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        // there will be logic for registration
+        // TODO there will be logic for registration
         return new SendMessage(update.chatId(), String.format(
             "Hello, %s!",
             update.userFName()

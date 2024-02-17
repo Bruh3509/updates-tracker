@@ -19,12 +19,12 @@ public final class Track implements Command {
 
     @Override
     public String command() {
-        return null;
+        return "/track";
     }
 
     @Override
     public String description() {
-        return null;
+        return "Tracks the link";
     }
 
     @Override
