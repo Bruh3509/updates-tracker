@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.bot.UpdatesProcessor;
 
 public final class Track implements Command {
@@ -15,7 +15,7 @@ public final class Track implements Command {
     private static final String TRACK_SUCCESS = """
         Link is tracked!
         """;
-    private static boolean isFirstCall = true;
+    private boolean isFirstCall = true;
 
     @Override
     public String command() {
@@ -28,21 +28,20 @@ public final class Track implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
-        var message = update.message();
+    public SendMessage handle(UpdateWrapper update) {
         if (!isFirstCall) {
             var links = UpdatesProcessor.getFOLLOWING_LINKS();
-            boolean isPresent = links.contains(message.text());
+            boolean isPresent = links.contains(update.messageText());
             isFirstCall = true;
             if (!isPresent) {
-                links.add(message.text());
-                return new SendMessage(message.chat().id(), TRACK_SUCCESS)
+                links.add(update.messageText());
+                return new SendMessage(update.chatId(), TRACK_SUCCESS)
                     .parseMode(ParseMode.Markdown);
             }
-            return new SendMessage(message.chat().id(), TRACK_PRESENT);
+            return new SendMessage(update.chatId(), TRACK_PRESENT);
         }
         isFirstCall = false;
-        return new SendMessage(message.chat().id(), TRACK_RESPONSE)
+        return new SendMessage(update.chatId(), TRACK_RESPONSE)
             .parseMode(ParseMode.Markdown);
     }
 }

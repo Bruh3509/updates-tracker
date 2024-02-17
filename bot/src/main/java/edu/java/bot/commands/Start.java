@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 
 public final class Start implements Command {
     @Override
@@ -16,10 +16,12 @@ public final class Start implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
+    public SendMessage handle(UpdateWrapper update) {
         // there will be logic for registration
-        return new SendMessage(update.message().chat().id(), String.format("Hello, %s!",
-                update.message().chat().firstName()))
+        return new SendMessage(update.chatId(), String.format(
+            "Hello, %s!",
+            update.userFName()
+        ))
             .parseMode(ParseMode.Markdown);
     }
 }

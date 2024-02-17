@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.bot.UpdatesProcessor;
 
 public final class List implements Command {
@@ -19,6 +19,7 @@ public final class List implements Command {
 
         return links.toString();
     }
+
     @Override
     public String command() {
         return null;
@@ -30,8 +31,8 @@ public final class List implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
-        return new SendMessage(update.message().chat().id(), getLinks())
+    public SendMessage handle(UpdateWrapper update) {
+        return new SendMessage(update.chatId(), getLinks())
             .parseMode(ParseMode.Markdown);
     }
 }

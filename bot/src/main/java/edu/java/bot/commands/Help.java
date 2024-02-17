@@ -1,8 +1,8 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 
 public final class Help implements Command {
     private static final String HELP_RESPONSE = """
@@ -23,8 +23,8 @@ public final class Help implements Command {
     }
 
     @Override
-    public SendMessage handle(Update update) {
-        return new SendMessage(update.message().chat().id(), HELP_RESPONSE)
+    public SendMessage handle(UpdateWrapper update) {
+        return new SendMessage(update.chatId(), HELP_RESPONSE)
             .parseMode(ParseMode.Markdown);
     }
 }

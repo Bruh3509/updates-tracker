@@ -1,8 +1,6 @@
-package hw1;
+package edu.java.bot.commands;
 
 import edu.java.bot.bot.UpdatesProcessor;
-import edu.java.bot.commands.Command;
-import edu.java.bot.commands.List;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.junit.jupiter.api.DisplayName;

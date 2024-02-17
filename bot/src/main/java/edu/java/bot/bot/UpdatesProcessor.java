@@ -1,7 +1,7 @@
 package edu.java.bot.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.Update;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.Help;
 import edu.java.bot.commands.List;
@@ -17,11 +17,14 @@ public class UpdatesProcessor {
     @Getter private static final java.util.List<String> FOLLOWING_LINKS = new ArrayList<>();
     // временное хранилище отслеживаемых ссылок
     // пока не подключится БД
-    private static Command.Name prevCommand = Command.Name.START;
+    //private static Command.Name prevCommand = Command.Name.START;
     private static boolean isTrackOrUntrack = false;
     private static Command prevCommandObj;
 
-    public static void process(Update update, TelegramBot bot) {
+    public static void process(UpdateWrapper update, TelegramBot bot) {
+        if (update.message() == null) { // stub
+            return;
+        }
         if (!isTrackOrUntrack) {
             Command command = identifyCommand(update);
             bot.execute(command.handle(update));
@@ -31,8 +34,8 @@ public class UpdatesProcessor {
         }
     }
 
-    private static Command identifyCommand(Update update) {
-        return switch (update.message().text()) {
+    private static Command identifyCommand(UpdateWrapper update) {
+        return switch (update.messageText()) {
             case "/start" -> {
                 //prevCommand = Command.Name.START;
                 yield new Start();
@@ -43,7 +46,7 @@ public class UpdatesProcessor {
             }
             case "/track" -> {
                 //prevCommand = Command.Name.TRACK;
-                prevCommandObj =  new Track();
+                prevCommandObj = new Track();
                 isTrackOrUntrack = true;
                 yield prevCommandObj;
             }
@@ -71,4 +74,7 @@ public class UpdatesProcessor {
         FOLLOWING_LINKS.remove(link);
     }
      */
+
+    private UpdatesProcessor() {
+    }
 }

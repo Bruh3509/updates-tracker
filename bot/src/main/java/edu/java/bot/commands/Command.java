@@ -1,10 +1,10 @@
 package edu.java.bot.commands;
 
-import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.apiwrapper.UpdateWrapper;
 
 public sealed interface Command permits Start, Help, Track, Untrack, List, Unknown {
-    public enum Name {
+    enum Name {
         START,
         HELP,
         TRACK,
@@ -12,7 +12,10 @@ public sealed interface Command permits Start, Help, Track, Untrack, List, Unkno
         LIST,
         UNKNOWN
     }
+
     String command(); // TODO
+
     String description(); // TODO
-    SendMessage handle(Update update);
+
+    SendMessage handle(UpdateWrapper update);
 }
