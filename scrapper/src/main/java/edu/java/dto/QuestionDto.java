@@ -1,4 +1,4 @@
 package edu.java.dto;
 
-public class QuestionDto {
+public record QuestionDto(Integer id, String title, String body) {
 }
