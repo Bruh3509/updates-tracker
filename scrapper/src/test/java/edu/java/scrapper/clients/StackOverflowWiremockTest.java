@@ -25,7 +25,7 @@ public class StackOverflowWiremockTest {
     static void startWireMock() {
         wireMockServer = new WireMockServer(8080);
         wireMockServer.start();
-        wireMockServer.stubFor(WireMock.get("/questions/1/test")
+        wireMockServer.stubFor(WireMock.get("/questions/1)
             .willReturn(WireMock.aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ public class StackOverflowWiremockTest {
     @Test
     void testWireMock() {
         System.out.println(wireMockServer.baseUrl());
-        System.out.println(client.findById(1, "test"));
+        System.out.println(client.findById(1));
         Assertions.assertTrue(wireMockServer.isRunning());
     }
 }
