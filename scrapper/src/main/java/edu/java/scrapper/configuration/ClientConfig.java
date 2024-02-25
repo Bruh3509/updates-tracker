@@ -1,5 +1,6 @@
 package edu.java.scrapper.configuration;
 
+import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,24 +10,11 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
 public class ClientConfig {
-    private static final String BASE_GITHUB_URL = "";
-    private static final String BASE_STACKOVERFLOW_URL = "http://stackoverflow.com";
+    private static final String LOCAL_HOST_8080 = "http://localhost:8080";
+    private static final String BASE_GITHUB_URL = "https://api.github.com";
+    private static final String BASE_STACKOVERFLOW_URL = "https://api.stackexchange.com";
 
-    /*
-    @Bean
-    GitHubClient gitHubClient(String baseUrl) {
-        RestClient restClient = RestClient
-            .builder()
-            .baseUrl(baseUrl)
-            .build();
-
-        HttpServiceProxyFactory factory
-            = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
-
-        return factory.createClient(GitHubClient.class);
-    }
-
-    @Bean
+    @Bean("github")
     GitHubClient gitHubClient() {
         RestClient restClient = RestClient
             .builder()
@@ -38,13 +26,25 @@ public class ClientConfig {
 
         return factory.createClient(GitHubClient.class);
     }
-     */
-    /*
-    @Bean
-    StackOverflowClient stackOverflowClientWithUrl(String baseUrl) {
+
+    @Bean("githubLocalhost")
+    GitHubClient gitHubClientLocalhost() {
         RestClient restClient = RestClient
             .builder()
-            .baseUrl(baseUrl)
+            .baseUrl(LOCAL_HOST_8080)
+            .build();
+
+        HttpServiceProxyFactory factory
+            = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
+
+        return factory.createClient(GitHubClient.class);
+    }
+
+    @Bean("stackoverflow")
+    StackOverflowClient stackOverflowClient() {
+        RestClient restClient = RestClient
+            .builder()
+            .baseUrl(BASE_STACKOVERFLOW_URL)
             .build();
 
         HttpServiceProxyFactory factory
@@ -52,12 +52,12 @@ public class ClientConfig {
 
         return factory.createClient(StackOverflowClient.class);
     }
-     */
-    @Bean
-    StackOverflowClient stackOverflowClient() {
+
+    @Bean("stackoverflowLocalhost")
+    StackOverflowClient stackOverflowClientLocalhost() {
         RestClient restClient = RestClient
             .builder()
-            .baseUrl(BASE_STACKOVERFLOW_URL)
+            .baseUrl(LOCAL_HOST_8080)
             .build();
 
         HttpServiceProxyFactory factory
