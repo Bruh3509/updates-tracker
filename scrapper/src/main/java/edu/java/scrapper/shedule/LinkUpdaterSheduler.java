@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @EnableScheduling
 public class LinkUpdaterSheduler {
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRateString = "${app.scheduler.interval}")
     public void update() {
         log.info("Update call!");
     }
