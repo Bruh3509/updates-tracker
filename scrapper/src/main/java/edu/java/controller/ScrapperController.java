@@ -1,9 +1,10 @@
 package edu.java.controller;
 
-import edu.java.dto.api.ScrapperDeleteResponse;
-import edu.java.dto.api.ScrapperGetResponse;
-import edu.java.dto.api.ScrapperPostRequest;
-import edu.java.dto.api.ScrapperPostResponse;
+import edu.java.dto.scrapper.Link;
+import edu.java.dto.scrapper.ScrapperDeleteResponse;
+import edu.java.dto.scrapper.ScrapperGetResponse;
+import edu.java.dto.scrapper.ScrapperPostRequest;
+import edu.java.dto.scrapper.ScrapperPostResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
@@ -13,19 +14,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 public class ScrapperController {
     @PostMapping("/tg-chat/{id}")
     public ResponseEntity<String> regChat(@PathVariable(required = true) Integer id) {
         // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+        return new ResponseEntity<>(
+            "Чат: %d зарегистрирован".formatted(id),
+            HttpStatus.OK
+        ); // TODO stub for now
     }
 
     @DeleteMapping("/tg-chat/{id}")
     public ResponseEntity<String> deleteChat(@PathVariable(required = true) Integer id) {
         // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+        return new ResponseEntity<>("Чат: %d удален".formatted(id)
+            , HttpStatus.OK); // TODO stub for now
     }
 
     @GetMapping("/links")
@@ -33,7 +39,11 @@ public class ScrapperController {
         @Header(name = "Tg-Chat-Id", required = true) Integer id
     ) { // not sure about header
         // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+        return new ResponseEntity<>(
+            new ScrapperGetResponse(
+                List.of(new Link(id, "stackoverflow")), 1),
+            HttpStatus.OK
+        ); // TODO stub for now
     }
 
     @PostMapping("/links")
@@ -42,14 +52,21 @@ public class ScrapperController {
         @RequestBody ScrapperPostRequest request
     ) {
         // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+        return new ResponseEntity<>(
+            new ScrapperPostResponse(id, request.link()),
+            HttpStatus.OK
+        ); // TODO stub for now
     }
 
     @DeleteMapping("/links")
     public ResponseEntity<ScrapperDeleteResponse> deleteLink(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id
+        @Header(name = "Tg-Chat-Id", required = true) Integer id,
+        @RequestBody ScrapperPostRequest link
     ) {
         // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+        return new ResponseEntity<>(
+            new ScrapperDeleteResponse(id, link.link()),
+            HttpStatus.OK
+        ); // TODO stub for now
     }
 }

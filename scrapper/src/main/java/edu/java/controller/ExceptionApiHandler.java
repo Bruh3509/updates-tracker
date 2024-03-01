@@ -1,6 +1,6 @@
 package edu.java.controller;
 
-import edu.java.dto.api.ScrapperErrorResponse;
+import edu.java.dto.scrapper.ScrapperErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
