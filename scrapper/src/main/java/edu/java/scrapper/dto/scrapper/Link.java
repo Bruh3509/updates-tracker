@@ -1,4 +1,4 @@
-package edu.java.dto.scrapper;
+package edu.java.scrapper.dto.scrapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

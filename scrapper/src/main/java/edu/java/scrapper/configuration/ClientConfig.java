@@ -1,6 +1,6 @@
-package edu.java.configuration;
+package edu.java.scrapper.configuration;
 
-import edu.java.clients.BotClient;
+import edu.java.scrapper.clients.BotClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
