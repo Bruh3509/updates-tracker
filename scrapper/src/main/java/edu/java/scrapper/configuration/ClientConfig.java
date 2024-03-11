@@ -67,7 +67,7 @@ public class ClientConfig {
 
         return factory.createClient(StackOverflowClient.class);
     }
-  
+
     @Bean
     BotClient botClient() {
         RestClient client = RestClient
