@@ -3,15 +3,35 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.21.xsd">
-    <changeSet id="chat-table-modify" author="bruh">
+    <changeSet id="chat-table" author="bruh">
         <sqlFile path="sql/create_chat_table.sql"/>
     </changeSet>
 
-    <changeSet id="create-link-table" author="bruh">
+    <changeSet id="link-table" author="bruh">
         <sqlFile path="sql/create_link_table.sql"/>
     </changeSet>
 
-    <changeSet id="cascade_delete" author="bruh">
+    <changeSet id="chat-to-link" author="bruh">
         <sqlFile path="sql/create_chat_to_link_table.sql"/>
+    </changeSet>
+
+    <changeSet id="chat-id-datatype-biginteger" author="bruh">
+        <modifyDataType tableName="chat" columnName="chat_id" newDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="link-id-datatype-biginteger" author="bruh">
+        <modifyDataType tableName="link" columnName="link_id" newDataType="bigint"/>
+    </changeSet>
+
+    <changeSet id="last-check-add" author="bruh">
+        <addColumn tableName="link">
+            <column name="last_check" type="bigint"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="last-update-add" author="bruh">
+        <addColumn tableName="link">
+            <column name="last_update" type="timestamp with time zone"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

@@ -1,4 +1,6 @@
 package edu.java.scrapper.dto.jdbc;
 
-public record LinkDto(long id, String name) {
+import java.time.OffsetDateTime;
+
+public record LinkDto(long id, String name, long curTime, OffsetDateTime lastUpdate) {
 }

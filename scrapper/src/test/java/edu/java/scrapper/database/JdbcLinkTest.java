@@ -25,13 +25,8 @@ class JdbcLinkTest extends IntegrationTest {
     @Transactional
     @Rollback
     void addTest() {
-        jdbcLinkDao.add(new LinkDto(42, "http://foreach.com"));
+        jdbcLinkDao.add(new LinkDto(42, "http://foreach.com", System.currentTimeMillis()));
+        jdbcLinkDao.add(new LinkDto(42, "http://foreach.com", System.currentTimeMillis()));
         System.out.println(jdbcLinkDao.findAll());
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    void removeTest() {
     }
 }

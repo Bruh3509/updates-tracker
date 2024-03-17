@@ -1,14 +1,18 @@
 package edu.java.scrapper.controller;
 
-import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.dto.scrapper.ScrapperDeleteResponse;
 import edu.java.scrapper.dto.scrapper.ScrapperGetResponse;
 import edu.java.scrapper.dto.scrapper.ScrapperPostRequest;
 import edu.java.scrapper.dto.scrapper.ScrapperPostResponse;
-import java.util.List;
+import edu.java.scrapper.service.jdbc.JdbcChatService;
+import edu.java.scrapper.service.jdbc.JdbcLinkService;
+import edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
+import java.net.URI;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,53 +20,68 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Component
 @RestController
 public class ScrapperController {
+    private final JdbcChatService jdbcChatService;
+    private final JdbcLinkService jdbcLinkService;
+    private final JdbcLinkUpdater jdbcLinkUpdater;
+
+    @Autowired
+    public ScrapperController(
+        JdbcChatService jdbcChatService,
+        JdbcLinkService jdbcLinkService,
+        JdbcLinkUpdater jdbcLinkUpdater
+    ) {
+        this.jdbcChatService = jdbcChatService;
+        this.jdbcLinkService = jdbcLinkService;
+        this.jdbcLinkUpdater = jdbcLinkUpdater;
+    }
+
     @PostMapping(value = "/tg-chat/{id}")
-    public ResponseEntity<Void> regChat(@PathVariable(required = true) Integer id) {
-        // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+    public ResponseEntity<Void> regChat(@PathVariable(required = true) Long id) {
+        jdbcChatService.register(id, "default"); // TODO stub for user name
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/tg-chat/{id}")
-    public ResponseEntity<Void> deleteChat(@PathVariable(required = true) Integer id) {
-        // TODO do smth
-        return new ResponseEntity<>(HttpStatus.OK); // TODO stub for now
+    public ResponseEntity<Void> deleteChat(@PathVariable(required = true) Long id) {
+        jdbcChatService.unregister(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(value = "/links", produces = "application/json")
     public ResponseEntity<ScrapperGetResponse> getLinks(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id
+        @Header(name = "Tg-Chat-Id", required = true) Long id
     ) { // not sure about header
-        // TODO do smth
+        var links = jdbcLinkService.listAll(id);
         return new ResponseEntity<>(
-            new ScrapperGetResponse(
-                List.of(new Link(id, "stackoverflow")), 1),
+            new ScrapperGetResponse(links, links.size()),
             HttpStatus.OK
-        ); // TODO stub for now
+        );
     }
 
     @PostMapping(value = "/links", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ScrapperPostResponse> addLink(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id,
+        @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody ScrapperPostRequest request
     ) {
-        // TODO do smth
+        jdbcLinkService.add(id, URI.create(request.link()));
         return new ResponseEntity<>(
             new ScrapperPostResponse(id, request.link()),
             HttpStatus.OK
-        ); // TODO stub for now
+        );
     }
 
     @DeleteMapping(value = "/links", consumes = "application/json", produces = "application/json")
     public ResponseEntity<ScrapperDeleteResponse> deleteLink(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id,
+        @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody ScrapperPostRequest link
     ) {
-        // TODO do smth
+        jdbcLinkService.remove(id, URI.create(link.link()));
         return new ResponseEntity<>(
             new ScrapperDeleteResponse(id, link.link()),
             HttpStatus.OK
-        ); // TODO stub for now
+        );
     }
 }

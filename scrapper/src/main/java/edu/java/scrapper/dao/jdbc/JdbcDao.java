@@ -8,4 +8,10 @@ public interface JdbcDao<T> {
     void remove(long id);
 
     List<T> findAll();
+
+    List<T> findAll(long id);
+
+    void updateModification(T t);
+
+    void updateCheck(T t);
 }
