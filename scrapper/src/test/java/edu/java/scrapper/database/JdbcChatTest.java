@@ -24,7 +24,7 @@ public class JdbcChatTest {
     @Transactional
     @Rollback
     void addTest() {
-        jdbcChatDao.add(new ChatDto(42, "@anastasya"));
+        jdbcChatDao.add(new ChatDto(0, "@anastasya"));
         System.out.println(jdbcChatDao.findAll());
     }
 }
