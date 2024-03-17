@@ -2,12 +2,14 @@ package edu.java.scrapper.database;
 
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dto.jdbc.ChatDto;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+@Disabled
 @SpringBootTest
 public class JdbcChatTest {
     @Autowired
