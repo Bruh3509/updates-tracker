@@ -11,7 +11,9 @@ import edu.java.bot.commands.Unknown;
 import edu.java.bot.commands.Untrack;
 import java.util.ArrayList;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class UpdatesProcessor {
 
     @Getter private static final java.util.List<String> FOLLOWING_LINKS = new ArrayList<>();
@@ -22,7 +24,8 @@ public class UpdatesProcessor {
     private static Command prevCommandObj;
 
     public static void process(UpdateWrapper update, TelegramBot bot) {
-        if (update.message() == null) { // stub
+        if (update.message() == null) {
+            log.info("No message update");
             return;
         }
         if (!isTrackOrUntrack) {
@@ -37,43 +40,27 @@ public class UpdatesProcessor {
     private static Command identifyCommand(UpdateWrapper update) {
         return switch (update.messageText()) {
             case "/start" -> {
-                //prevCommand = Command.Name.START;
                 yield new Start();
             }
             case "/help" -> {
-                //prevCommand = Command.Name.HELP;
                 yield new Help();
             }
             case "/track" -> {
-                //prevCommand = Command.Name.TRACK;
                 prevCommandObj = new Track();
                 isTrackOrUntrack = true;
                 yield prevCommandObj;
             }
             case "/untrack" -> {
-                //prevCommand = Command.Name.UNTRACK;
                 prevCommandObj = new Untrack();
                 isTrackOrUntrack = true;
                 yield prevCommandObj;
             }
             case "/list" -> {
-                //prevCommand = Command.Name.LIST;
                 yield new List();
             }
             default -> new Unknown();
         };
     }
-
-    // TODO перенес методы в соответсвующие классы (не уверен)
-    /*
-    private static void track(String link) {
-        FOLLOWING_LINKS.add(link);
-    }
-
-    private static void untrack(String link) {
-        FOLLOWING_LINKS.remove(link);
-    }
-     */
 
     private UpdatesProcessor() {
     }
