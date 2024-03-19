@@ -1,6 +1,7 @@
 package edu.java.bot.bot;
-
+// TODO DI of commands and track, untrack logic (maybe make additioanl class to just print in first call).
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.Help;
@@ -10,30 +11,53 @@ import edu.java.bot.commands.Track;
 import edu.java.bot.commands.Unknown;
 import edu.java.bot.commands.Untrack;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 @Slf4j
 public class UpdatesProcessor {
+    static class UserState {
+        boolean isTrackOrUntrack;
+        Command prevCommandObj;
 
-    @Getter private static final java.util.List<String> FOLLOWING_LINKS = new ArrayList<>();
-    // временное хранилище отслеживаемых ссылок
-    // пока не подключится БД
-    //private static Command.Name prevCommand = Command.Name.START;
-    private static boolean isTrackOrUntrack = false;
-    private static Command prevCommandObj;
+        public UserState(boolean isTrackOrUntrack, Command prevCommandObj) {
+            this.isTrackOrUntrack = isTrackOrUntrack;
+            this.prevCommandObj = prevCommandObj;
+        }
+    }
+
+    private static Map<Long, UserState> usersState;
+    private static TelegramBot bot;
+
+    @Autowired
+    public void init(TelegramBot bot) {
+        usersState = new HashMap<>();
+        UpdatesProcessor.bot = bot;
+        bot.setUpdatesListener(updates -> {
+            updates.forEach(update -> {
+                log.info(update.toString());
+                UpdatesProcessor.process(new UpdateWrapper(update), bot);
+            });
+            return UpdatesListener.CONFIRMED_UPDATES_ALL;
+        });
+    }
 
     public static void process(UpdateWrapper update, TelegramBot bot) {
         if (update.message() == null) {
             log.info("No message update");
             return;
         }
-        if (!isTrackOrUntrack) {
+        if (!usersState.get(update.chatId()).isTrackOrUntrack) {
             Command command = identifyCommand(update);
             bot.execute(command.handle(update));
         } else {
-            bot.execute(prevCommandObj.handle(update));
-            isTrackOrUntrack = false;
+            bot.execute(usersState.get(update.chatId()).prevCommandObj.handle(update));
+            usersState.get(update.chatId()).isTrackOrUntrack = false;
         }
     }
 
@@ -46,14 +70,16 @@ public class UpdatesProcessor {
                 yield new Help();
             }
             case "/track" -> {
-                prevCommandObj = new Track();
-                isTrackOrUntrack = true;
-                yield prevCommandObj;
+                var cur = usersState.get(update.chatId());
+                cur.prevCommandObj = new Track();
+                cur.isTrackOrUntrack = true;
+                yield cur.prevCommandObj;
             }
             case "/untrack" -> {
-                prevCommandObj = new Untrack();
-                isTrackOrUntrack = true;
-                yield prevCommandObj;
+                var cur = usersState.get(update.chatId());
+                cur.prevCommandObj = new Untrack();
+                cur.isTrackOrUntrack = true;
+                yield cur.prevCommandObj;
             }
             case "/list" -> {
                 yield new List();

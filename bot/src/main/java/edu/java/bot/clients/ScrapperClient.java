@@ -14,25 +14,25 @@ import org.springframework.web.service.annotation.PostExchange;
 
 public interface ScrapperClient {
     @PostExchange("/tg-chat/{id}")
-    ResponseEntity<Void> regChat(@PathVariable(required = true) Integer id);
+    ResponseEntity<Void> regChat(@PathVariable(required = true) Long id);
 
     @DeleteExchange("/tg-chat/{id}")
-    ResponseEntity<Void> deleteChat(@PathVariable(required = true) Integer id);
+    ResponseEntity<Void> deleteChat(@PathVariable(required = true) Long id);
 
     @GetExchange(value = "/links", accept = "application/json")
     ResponseEntity<GetResponse> getAllLinks(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id
+        @Header(name = "Tg-Chat-Id", required = true) Long id
     );
 
     @PostExchange(value = "/links", contentType = "application/json", accept = "application/json")
     ResponseEntity<PostResponse> addLink(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id,
+        @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody PostRequest link
     );
 
     @DeleteExchange(value = "/links", contentType = "application/json", accept = "application/json")
     ResponseEntity<DeleteResponse> deleteLink(
-        @Header(name = "Tg-Chat-Id", required = true) Integer id,
+        @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody PostRequest link
     );
 }

@@ -4,20 +4,27 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.bot.UpdatesProcessor;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.dto.scrapper.Link;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public final class List implements Command {
-    private String getLinks() {
-        StringBuilder links = new StringBuilder();
-        for (var link : UpdatesProcessor.getFOLLOWING_LINKS()) {
-            String cur = "`" + link + "`\n";
-            links.append(cur);
-        }
+@Component
+public class List implements Command {
+    ScrapperClient scrapperClient;
 
-        if (links.isEmpty()) {
-            links.append("You aren't following something!");
-        }
+    @Autowired
+    public List(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
+    }
 
-        return links.toString();
+    private String getLinks(Long id) {
+        var response = scrapperClient.getAllLinks(id);
+        var links = response.getBody().links();
+        StringBuilder result = new StringBuilder();
+        links.forEach(link -> result.append("`%s`\n".formatted(link.url().toString())));
+
+        return result.toString();
     }
 
     public String command() {
@@ -31,7 +38,7 @@ public final class List implements Command {
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        return new SendMessage(update.chatId(), getLinks())
+        return new SendMessage(update.chatId(), getLinks(update.chatId()))
             .parseMode(ParseMode.Markdown);
     }
 }

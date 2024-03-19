@@ -66,7 +66,8 @@ public class ScrapperController {
         @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody ScrapperPostRequest request
     ) {
-        jdbcLinkService.add(id, URI.create(request.link()));
+        var link = request.link();
+        jdbcLinkService.add(id, link.hashCode(), URI.create(link));
         return new ResponseEntity<>(
             new ScrapperPostResponse(id, request.link()),
             HttpStatus.OK
@@ -78,7 +79,7 @@ public class ScrapperController {
         @Header(name = "Tg-Chat-Id", required = true) Long id,
         @RequestBody ScrapperPostRequest link
     ) {
-        jdbcLinkService.remove(id, URI.create(link.link()));
+        jdbcLinkService.remove(id, link.link().hashCode());
         return new ResponseEntity<>(
             new ScrapperDeleteResponse(id, link.link()),
             HttpStatus.OK

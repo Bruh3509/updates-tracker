@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 
-public final class Help implements Command {
+public class Help implements Command {
     private static final String HELP_RESPONSE = """
         `/start` --> starts the bot
         `/help` --> list of commands

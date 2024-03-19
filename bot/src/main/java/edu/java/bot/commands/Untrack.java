@@ -4,8 +4,15 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.bot.UpdatesProcessor;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.dto.scrapper.Link;
+import edu.java.bot.dto.scrapper.PostRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import java.net.URI;
 
-public final class Untrack implements Command {
+@Component
+public class Untrack implements Command {
     private static final String UNTRACK_RESPONSE = """
         Enter `link` to stop follow!
         """;
@@ -15,7 +22,13 @@ public final class Untrack implements Command {
     private static final String UNTRACK_NO_PRESENT = """
         No following this link!
         """;
+    private ScrapperClient scrapperClient;
     private boolean isFirstCall = true;
+
+    @Autowired
+    public Untrack(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
+    }
 
     @Override
     public String command() {
@@ -30,9 +43,24 @@ public final class Untrack implements Command {
     @Override
     public SendMessage handle(UpdateWrapper update) {
         if (!isFirstCall) {
-            boolean isPresent = UpdatesProcessor.getFOLLOWING_LINKS().remove(update.messageText());
+            var links = scrapperClient.getAllLinks(update.chatId()).getBody().links();
+            var userInput = update.messageText();
+            boolean isPresent = false;
+            for (var link : links) {
+                if (link.url().toString().equals(userInput)) {
+                    isPresent = true;
+                    break;
+                }
+            }
             isFirstCall = true;
             if (isPresent) {
+                scrapperClient.deleteLink(
+                    update.chatId(),
+                    new PostRequest(new Link(
+                        userInput.hashCode(),
+                        URI.create(userInput)
+                    ))
+                );
                 return new SendMessage(update.chatId(), UNTRACK_SUCCESS)
                     .parseMode(ParseMode.Markdown);
             }

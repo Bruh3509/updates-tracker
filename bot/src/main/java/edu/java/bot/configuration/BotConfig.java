@@ -46,15 +46,6 @@ public class BotConfig {
         SetMyCommands myCommands
             = new SetMyCommands(startCommand, trackCommand, untrackCommand, listCommand, helpCommand);
         bot.execute(myCommands);
-
-        bot.setUpdatesListener(updates -> {
-            updates.forEach(update -> {
-                log.info(update.toString());
-                UpdatesProcessor.process(new UpdateWrapper(update), bot);
-            });
-            return UpdatesListener.CONFIRMED_UPDATES_ALL;
-        });
-
         return bot;
     }
 }
