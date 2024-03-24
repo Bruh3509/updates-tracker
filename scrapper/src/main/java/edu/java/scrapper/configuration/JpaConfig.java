@@ -10,6 +10,7 @@ import edu.java.scrapper.service.interfaces.LinkUpdater;
 import edu.java.scrapper.service.jpa.JpaChatService;
 import edu.java.scrapper.service.jpa.JpaLinkService;
 import edu.java.scrapper.service.jpa.JpaLinkUpdater;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,7 +21,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import javax.sql.DataSource;
 
 @Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")

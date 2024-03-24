@@ -1,17 +1,14 @@
 package edu.java.scrapper.shedule;
 
 import edu.java.scrapper.clients.BotClient;
-import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
 import edu.java.scrapper.dto.bot.PostRequest;
-import edu.java.scrapper.dto.jdbc.ChatToLinkDto;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
-import edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 @Component
 @Slf4j

@@ -1,4 +1,5 @@
 package edu.java.bot.bot;
+
 // TODO DI of commands and track, untrack logic (maybe make additioanl class to just print in first call).
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -22,16 +23,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class UpdatesProcessor {
-    static class UserState {
-        boolean isTrackOrUntrack;
-        Command prevCommandObj;
-
-        public UserState(boolean isTrackOrUntrack, Command prevCommandObj) {
-            this.isTrackOrUntrack = isTrackOrUntrack;
-            this.prevCommandObj = prevCommandObj;
-        }
-    }
-
     private static Map<Long, UserState> usersState;
     private static TelegramBot bot;
     private static Help help;
@@ -44,6 +35,7 @@ public class UpdatesProcessor {
     private static UntrackInfo untrackInfo;
 
     @Autowired
+    @SuppressWarnings({"ParameterNumber"})
     public void init(
         TelegramBot bot,
         Help help,
@@ -118,4 +110,15 @@ public class UpdatesProcessor {
 
     private UpdatesProcessor() {
     }
+
+    static class UserState {
+        boolean isTrackOrUntrack;
+        Command prevCommandObj;
+
+        UserState(boolean isTrackOrUntrack, Command prevCommandObj) {
+            this.isTrackOrUntrack = isTrackOrUntrack;
+            this.prevCommandObj = prevCommandObj;
+        }
+    }
+
 }

@@ -1,6 +1,5 @@
 package edu.java.scrapper.configuration;
 
-import javax.sql.DataSource;
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
@@ -12,6 +11,7 @@ import edu.java.scrapper.service.interfaces.LinkUpdater;
 import edu.java.scrapper.service.jdbc.JdbcChatService;
 import edu.java.scrapper.service.jdbc.JdbcLinkService;
 import edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
