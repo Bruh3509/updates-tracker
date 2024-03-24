@@ -1,5 +1,6 @@
-package edu.java.scrapper.database;
+package edu.java.scrapper.database.jdbc;
 
+import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dto.jdbc.ChatDto;
 import org.junit.jupiter.api.Disabled;
@@ -9,9 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-@Disabled
 @SpringBootTest
-public class JdbcChatTest {
+public class JdbcChatTest extends IntegrationTest {
     @Autowired
     private JdbcChatDao jdbcChatDao;
 

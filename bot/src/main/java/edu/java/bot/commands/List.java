@@ -3,13 +3,13 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
-import edu.java.bot.bot.UpdatesProcessor;
 import edu.java.bot.clients.ScrapperClient;
-import edu.java.bot.dto.scrapper.Link;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope("")
 public class List implements Command {
     ScrapperClient scrapperClient;
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -18,17 +19,14 @@ import org.springframework.stereotype.Component;
 public class LinkUpdaterSheduler {
     private final LinkUpdater linkUpdater;
     private final BotClient botClient;
-    private final JdbcChatToLinkDao jdbcChatToLinkDao;
 
     @Autowired
     public LinkUpdaterSheduler(
-        JdbcLinkUpdater linkUpdater,
-        BotClient botClient,
-        JdbcChatToLinkDao jdbcChatToLinkDao
+        LinkUpdater linkUpdater,
+        BotClient botClient
     ) {
         this.linkUpdater = linkUpdater;
         this.botClient = botClient;
-        this.jdbcChatToLinkDao = jdbcChatToLinkDao;
     }
 
     @Scheduled(fixedRateString = "${app.scheduler.interval}")
@@ -40,11 +38,8 @@ public class LinkUpdaterSheduler {
                 update.id(),
                 update.name(),
                 "TODO description of the update",
-                jdbcChatToLinkDao
-                    .findByLinkId(update.id())
-                    .stream()
-                    .map(ChatToLinkDto::chatId)
-                    .toList()
+                List.of(1L)
+                // TODO chat ids
             )));
     }
 }

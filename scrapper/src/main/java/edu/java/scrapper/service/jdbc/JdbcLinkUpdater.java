@@ -7,25 +7,16 @@ import edu.java.scrapper.dto.jdbc.LinkDto;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JdbcLinkUpdater implements LinkUpdater {
-    private static final int FIVE_MINUTES = 300_000;
-    private static final String GITHUB = "https://github.com";
-    private static final String STACK = "https://stackoverflow.com";
-    private static final String SITE = "stackoverflow";
 
-    GitHubClient gitHubClient;
-    StackOverflowClient stackOverflowClient;
-    JdbcLinkDao jdbcLinkDao;
+    private final GitHubClient gitHubClient;
+    private final StackOverflowClient stackOverflowClient;
+    private final JdbcLinkDao jdbcLinkDao;
 
-    @Autowired
     public JdbcLinkUpdater(
-        @Qualifier("github") GitHubClient gitHubClient,
-        @Qualifier("stackoverflow") StackOverflowClient stackOverflowClient,
+        GitHubClient gitHubClient,
+        StackOverflowClient stackOverflowClient,
         JdbcLinkDao jdbcLinkDao
     ) {
         this.gitHubClient = gitHubClient;

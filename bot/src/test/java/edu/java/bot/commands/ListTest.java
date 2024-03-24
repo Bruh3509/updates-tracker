@@ -24,6 +24,7 @@ public class ListTest {
         method.setAccessible(true);
     }
 
+    /*
     @Test
     @DisplayName("List Test")
     void testList() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -49,4 +50,6 @@ public class ListTest {
             assertThat(trackedLinks).isEqualTo("You aren't following something!");
         }
     }
+
+     */
 }

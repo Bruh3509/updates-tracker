@@ -3,27 +3,24 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
-import edu.java.bot.bot.UpdatesProcessor;
 import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.dto.scrapper.Link;
 import edu.java.bot.dto.scrapper.PostRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import java.net.URI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component
+@Scope("")
 public class Untrack implements Command {
-    private static final String UNTRACK_RESPONSE = """
-        Enter `link` to stop follow!
-        """;
     private static final String UNTRACK_SUCCESS = """
         Successfully untracked!
         """;
     private static final String UNTRACK_NO_PRESENT = """
         No following this link!
         """;
-    private ScrapperClient scrapperClient;
-    private boolean isFirstCall = true;
+    private final ScrapperClient scrapperClient;
 
     @Autowired
     public Untrack(ScrapperClient scrapperClient) {
@@ -42,32 +39,26 @@ public class Untrack implements Command {
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        if (!isFirstCall) {
-            var links = scrapperClient.getAllLinks(update.chatId()).getBody().links();
-            var userInput = update.messageText();
-            boolean isPresent = false;
-            for (var link : links) {
-                if (link.url().toString().equals(userInput)) {
-                    isPresent = true;
-                    break;
-                }
+        var links = scrapperClient.getAllLinks(update.chatId()).getBody().links();
+        var userInput = update.messageText();
+        boolean isPresent = false;
+        for (var link : links) {
+            if (link.url().toString().equals(userInput)) {
+                isPresent = true;
+                break;
             }
-            isFirstCall = true;
-            if (isPresent) {
-                scrapperClient.deleteLink(
-                    update.chatId(),
-                    new PostRequest(new Link(
-                        userInput.hashCode(),
-                        URI.create(userInput)
-                    ))
-                );
-                return new SendMessage(update.chatId(), UNTRACK_SUCCESS)
-                    .parseMode(ParseMode.Markdown);
-            }
-            return new SendMessage(update.chatId(), UNTRACK_NO_PRESENT);
         }
-        isFirstCall = false;
-        return new SendMessage(update.chatId(), UNTRACK_RESPONSE)
-            .parseMode(ParseMode.Markdown);
+        if (isPresent) {
+            scrapperClient.deleteLink(
+                update.chatId(),
+                new PostRequest(new Link(
+                    userInput.hashCode(),
+                    URI.create(userInput)
+                ))
+            );
+            return new SendMessage(update.chatId(), UNTRACK_SUCCESS)
+                .parseMode(ParseMode.Markdown);
+        }
+        return new SendMessage(update.chatId(), UNTRACK_NO_PRESENT);
     }
 }

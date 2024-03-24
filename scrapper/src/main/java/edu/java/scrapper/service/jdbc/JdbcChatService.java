@@ -3,14 +3,10 @@ package edu.java.scrapper.service.jdbc;
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dto.jdbc.ChatDto;
 import edu.java.scrapper.service.interfaces.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JdbcChatService implements ChatService {
-    JdbcChatDao jdbcChatDao;
+    private final JdbcChatDao jdbcChatDao;
 
-    @Autowired
     public JdbcChatService(JdbcChatDao jdbcChatDao) {
         this.jdbcChatDao = jdbcChatDao;
     }

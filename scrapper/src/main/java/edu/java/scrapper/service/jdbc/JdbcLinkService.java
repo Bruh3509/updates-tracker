@@ -10,16 +10,12 @@ import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JdbcLinkService implements LinkService {
     private final JdbcChatToLinkDao jdbcChatToLinkDao;
     private final JdbcLinkDao jdbcLinkDao;
     private final JdbcChatDao jdbcChatDao;
 
-    @Autowired
     public JdbcLinkService(JdbcChatToLinkDao jdbcChatToLinkDao, JdbcLinkDao jdbcLinkDao, JdbcChatDao jdbcChatDao) {
         this.jdbcChatToLinkDao = jdbcChatToLinkDao;
         this.jdbcLinkDao = jdbcLinkDao;
