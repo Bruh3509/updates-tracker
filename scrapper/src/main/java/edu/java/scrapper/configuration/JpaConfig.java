@@ -28,10 +28,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JpaConfig {
-    @Value("${spring.datasource.url:jdbc:postgresql://localhost:5432/scrapper}")
+    @Value("#{systemProperties['spring.datasource.url'] ?: 'jdbc:postgresql://localhost:5432/scrapper'}")
     private String jdbcUrl;
 
-    private DataSource dataSource() {
+    @Bean
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl(jdbcUrl);
