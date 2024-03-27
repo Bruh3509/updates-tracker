@@ -1,9 +1,8 @@
 package edu.java.scrapper.database.jdbc;
 
 import edu.java.scrapper.IntegrationTest;
-import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import edu.java.scrapper.dto.jdbc.LinkDto;
-import java.time.OffsetDateTime;
+import java.net.URI;
+import edu.java.scrapper.service.interfaces.LinkService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,21 +12,21 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 class JdbcLinkTest extends IntegrationTest {
     @Autowired
-    private JdbcLinkDao jdbcLinkDao;
+    private LinkService linkService;
 
     @Test
     @Transactional
     @Rollback
     void findAllTest() {
-        System.out.println(jdbcLinkDao.findAll());
+        System.out.println(linkService.listAll(1));
     }
 
     @Test
     @Transactional
     @Rollback
     void addTest() {
-        jdbcLinkDao.add(new LinkDto(42, "http://foreach.com", System.currentTimeMillis(), OffsetDateTime.now()));
-        jdbcLinkDao.add(new LinkDto(42, "http://foreach.com", System.currentTimeMillis(), OffsetDateTime.now()));
-        System.out.println(jdbcLinkDao.findAll());
+        linkService.add(42, "http://foreach.com".hashCode(), URI.create("http://foreach.com"));
+        linkService.add(42, "http://foreach.com".hashCode(), URI.create("http://foreach.com"));
+        System.out.println(linkService.listAll(42));
     }
 }

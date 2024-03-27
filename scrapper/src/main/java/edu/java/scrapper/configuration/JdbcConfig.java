@@ -24,22 +24,26 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@Configuration
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
+@Configuration
 @EnableTransactionManagement
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcConfig {
     @Value("#{systemProperties['spring.datasource.url'] ?: 'jdbc:postgresql://localhost:5432/scrapper'}")
     private String jdbcUrl;
+    @Value("#{systemProperties['spring.datasource.username'] ?: 'postgres'}")
+    private String username;
+    @Value("#{systemProperties['spring.datasource.password'] ?: 'postgres'}")
+    private String password;
 
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl(jdbcUrl);
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("postgres");
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
 
         return dataSource;
     }

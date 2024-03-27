@@ -68,6 +68,11 @@ public abstract class IntegrationTest {
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
+
+    @DynamicPropertySource
+    static void setJdbcAccessType(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jdbc");
+    }
 }
 
 class SimpleIntTest extends IntegrationTest {
