@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 // maybe some fields should be added.
-public record RepositoryDto(@JsonProperty("id") Integer id,
+public record RepositoryDto(@JsonProperty("id") Long id,
                             @JsonProperty("full_name") String name,
                             @JsonProperty("html_url") String link,
                             @JsonProperty("created_at") OffsetDateTime createDate,

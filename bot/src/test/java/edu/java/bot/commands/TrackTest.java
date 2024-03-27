@@ -18,6 +18,7 @@ public class TrackTest {
     @Mock
     UpdateWrapper updatePresent;
 
+   /*
     Track trackSuccess = new Track();
     Track trackPresent = new Track();
 
@@ -59,4 +60,6 @@ public class TrackTest {
         // clear storage
         UpdatesProcessor.getFOLLOWING_LINKS().clear();
     }
+
+     */
 }

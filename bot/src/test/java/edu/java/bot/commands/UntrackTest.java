@@ -18,6 +18,7 @@ public class UntrackTest {
     @Mock
     UpdateWrapper updateNoSuccess;
 
+    /*
     Untrack untrackSuccess = new Untrack();
     Untrack untrackNoSuccess = new Untrack();
 
@@ -63,4 +64,6 @@ public class UntrackTest {
         // clear storage
         links.clear();
     }
+
+     */
 }

@@ -3,10 +3,18 @@ app:
     enable: true
     interval: 5000
     force-check-delay: 10s
+  database-access-type: jdbc
 
 spring:
   application:
     name: scrapper
+  liquibase:
+    enabled: false
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
