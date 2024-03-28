@@ -1,32 +1,47 @@
 package edu.java.scrapper.database.jdbc;
 
 import edu.java.scrapper.IntegrationTest;
+
 import java.net.URI;
+
+import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class JdbcLinkTest extends IntegrationTest {
-    @Autowired
-    private LinkService linkService;
-
-    @Test
-    @Transactional
-    @Rollback
-    void findAllTest() {
-        System.out.println(linkService.listAll(1));
+    @DynamicPropertySource
+    static void setJdbcAccessType(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jdbc");
     }
 
+    @Autowired
+    private LinkService linkService;
+    @Autowired
+    private ChatService chatService;
+
     @Test
     @Transactional
     @Rollback
-    void addTest() {
-        linkService.add(42, "http://foreach.com".hashCode(), URI.create("http://foreach.com"));
-        linkService.add(42, "http://foreach.com".hashCode(), URI.create("http://foreach.com"));
-        System.out.println(linkService.listAll(42));
+    void test() {
+        var link = "http://foreach.com";
+        chatService.register(42, "default");
+        linkService.add(42, link.hashCode(), URI.create(link));
+        assertThat(linkService.listAll(42)).containsExactly(new Link(
+                (long) link.hashCode(),
+                link
+        ));
+        linkService.remove(42, link.hashCode());
+        assertThat(linkService.listAll(42)).isEmpty();
     }
 }
