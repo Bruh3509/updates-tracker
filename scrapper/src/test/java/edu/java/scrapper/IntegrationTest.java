@@ -71,7 +71,7 @@ public abstract class IntegrationTest {
 
     @DynamicPropertySource
     static void setJdbcAccessType(DynamicPropertyRegistry registry) {
-        //registry.add("app.database-access-type", () -> "jdbc");
+        registry.add("app.database-access-type", () -> "jdbc");
     }
 }
 
