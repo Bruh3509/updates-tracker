@@ -30,11 +30,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcConfig {
-    @Value("#{systemProperties['spring.datasource.url'] ?: 'jdbc:postgresql://localhost:5432/scrapper'}")
+    @Value("#{ systemProperties['spring.datasource.url'] }")
     private String jdbcUrl;
-    @Value("#{systemProperties['spring.datasource.username'] ?: 'postgres'}")
+    @Value("#{ systemProperties['spring.datasource.username'] }")
     private String username;
-    @Value("#{systemProperties['spring.datasource.password'] ?: 'postgres'}")
+    @Value("#{ systemProperties['spring.datasource.password'] }")
     private String password;
 
     @Bean
