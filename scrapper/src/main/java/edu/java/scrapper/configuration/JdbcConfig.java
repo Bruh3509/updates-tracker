@@ -2,26 +2,30 @@ package edu.java.scrapper.configuration;
 
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
-import edu.java.scrapper.repository.ChatRepository;
-import edu.java.scrapper.repository.LinkRepository;
+import edu.java.scrapper.dao.jdbc.JdbcChatDao;
+import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
+import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
-import edu.java.scrapper.service.jpa.JpaChatService;
-import edu.java.scrapper.service.jpa.JpaLinkService;
-import edu.java.scrapper.service.jpa.JpaLinkUpdater;
+import edu.java.scrapper.service.jdbc.JdbcChatService;
+import edu.java.scrapper.service.jdbc.JdbcLinkService;
+import edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
 import javax.sql.DataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+@Slf4j
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 @Configuration
 @EnableTransactionManagement
@@ -37,6 +41,7 @@ public class JdbcConfig {
 
     @Bean
     public DataSource dataSource() {
+        log.info(jdbcUrl);
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl(jdbcUrl);
@@ -47,29 +52,38 @@ public class JdbcConfig {
     }
 
     @Bean
-    LinkService linkService(
-        LinkRepository linkRepository,
-        ChatRepository chatRepository
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public LinkService linkService(
+        JdbcLinkDao jdbcLinkDao,
+        JdbcChatDao jdbcChatDao,
+        JdbcChatToLinkDao jdbcChatToLinkDao
     ) {
-        return new JpaLinkService(linkRepository, chatRepository);
+        return new JdbcLinkService(jdbcChatToLinkDao, jdbcLinkDao, jdbcChatDao);
     }
 
     @Bean
-    ChatService chatService(ChatRepository chatRepository) {
-        return new JpaChatService(chatRepository);
+    public ChatService chatService(
+        JdbcChatDao jdbcChatDao
+    ) {
+        return new JdbcChatService(jdbcChatDao);
     }
 
     @Bean
-    LinkUpdater linkUpdater(
+    public LinkUpdater linkUpdater(
         @Qualifier("github") GitHubClient gitHubClient,
         @Qualifier("stackoverflow") StackOverflowClient stackOverflowClient,
-        LinkRepository linkRepository
+        JdbcLinkDao jdbcLinkDao,
+        JdbcChatToLinkDao jdbcChatToLinkDao
     ) {
-        return new JpaLinkUpdater(gitHubClient, stackOverflowClient, linkRepository);
+        return new JdbcLinkUpdater(gitHubClient, stackOverflowClient, jdbcLinkDao, jdbcChatToLinkDao);
     }
 
     @Bean
-    public PlatformTransactionManager platformTransactionManager() {
+    public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 }

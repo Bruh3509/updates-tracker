@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class JpaLinkTest extends IntegrationTest {
     @DynamicPropertySource
-    static void setJdbcAccessType(DynamicPropertyRegistry registry) {
+    static void setJpaAccessType(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jpa");
     }
 
@@ -37,8 +37,8 @@ public class JpaLinkTest extends IntegrationTest {
         chatService.register(42, "default");
         linkService.add(42, link.hashCode(), URI.create(link));
         assertThat(linkService.listAll(42)).containsExactly(new Link(
-                (long) link.hashCode(),
-                link
+            (long) link.hashCode(),
+            link
         ));
         linkService.remove(42, link.hashCode());
         assertThat(linkService.listAll(42)).isEmpty();

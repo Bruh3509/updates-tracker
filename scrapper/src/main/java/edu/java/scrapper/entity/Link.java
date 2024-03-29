@@ -1,11 +1,13 @@
 package edu.java.scrapper.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,14 +29,16 @@ public class Link {
     @Column(name = "last_update")
     private OffsetDateTime lastUpdate;
 
-    @ManyToMany(mappedBy = "followingLinks")
-    private List<Chat> followingChats;
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "followingLinks")
+    private List<Chat> followingChats = new ArrayList<>();
 
     public Link() {
     }
 
-    public Link(Long id, String name) {
+    public Link(Long id, String name, Long curTime, OffsetDateTime lastUpdate) {
         this.id = id;
         this.name = name;
+        this.curTime = curTime;
+        this.lastUpdate = lastUpdate;
     }
 }

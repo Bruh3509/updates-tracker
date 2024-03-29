@@ -2,7 +2,8 @@ package edu.java.scrapper.service.jpa;
 
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
-import edu.java.scrapper.dto.jdbc.LinkDto;
+import edu.java.scrapper.dto.bot.LinkUpdate;
+import edu.java.scrapper.entity.Chat;
 import edu.java.scrapper.repository.LinkRepository;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
@@ -29,11 +30,11 @@ public class JpaLinkUpdater implements LinkUpdater {
     }
 
     @Override
-    public List<LinkDto> update() {
+    public List<LinkUpdate> update() {
         return linkRepository.findAll()
             .stream()
             .filter(link -> (System.currentTimeMillis() - link.getCurTime()) > FIVE_MINUTES)
-            .filter(link -> { // the same logic is in JdbcLinkUpdater
+            .filter(link -> {
                 var name = link.getName();
                 var uri = URI.create(name);
                 String[] pathComponents = uri.getPath().split("/");
@@ -59,7 +60,11 @@ public class JpaLinkUpdater implements LinkUpdater {
                 }
                 return false;
             })
-            .map(link -> new LinkDto(link.getId(), link.getName(), link.getCurTime(), link.getLastUpdate()))
+            .map(link -> new LinkUpdate(
+                link.getId(),
+                link.getName(),
+                link.getFollowingChats().stream().map(Chat::getChatId).toList() // List of chat's id
+            ))
             .toList();
     }
 }

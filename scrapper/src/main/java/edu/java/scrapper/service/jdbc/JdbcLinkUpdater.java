@@ -2,35 +2,40 @@ package edu.java.scrapper.service.jdbc;
 
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
+import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
 import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import edu.java.scrapper.dto.jdbc.LinkDto;
+import edu.java.scrapper.dto.bot.LinkUpdate;
+import edu.java.scrapper.dto.jdbc.ChatToLinkDto;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 public class JdbcLinkUpdater implements LinkUpdater {
 
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
     private final JdbcLinkDao jdbcLinkDao;
+    private final JdbcChatToLinkDao jdbcChatToLinkDao;
 
     public JdbcLinkUpdater(
-        GitHubClient gitHubClient,
-        StackOverflowClient stackOverflowClient,
-        JdbcLinkDao jdbcLinkDao
+        @Qualifier("github") GitHubClient gitHubClient,
+        @Qualifier("stackoverflow") StackOverflowClient stackOverflowClient,
+        JdbcLinkDao jdbcLinkDao,
+        JdbcChatToLinkDao jdbcChatToLinkDao
     ) {
         this.gitHubClient = gitHubClient;
         this.stackOverflowClient = stackOverflowClient;
         this.jdbcLinkDao = jdbcLinkDao;
+        this.jdbcChatToLinkDao = jdbcChatToLinkDao;
     }
 
     @Override
-    public List<LinkDto> update() { // TODO if modified rewrite db record
+    public List<LinkUpdate> update() { // TODO if modified rewrite db record
         return jdbcLinkDao.findAll()
             .stream()
-            .filter(link -> (System.currentTimeMillis() - link.curTime()) > FIVE_MINUTES) // how long ago was checked
-            .filter(link -> { // if there are updates + modify table in db if they are
-                // TODO maybe the last one should be done in the other place?
+            .filter(link -> (System.currentTimeMillis() - link.curTime()) > FIVE_MINUTES)
+            .filter(link -> {
                 var name = link.name();
                 var uri = URI.create(name);
                 String[] pathComponents = uri.getPath().split("/");
@@ -57,6 +62,9 @@ public class JdbcLinkUpdater implements LinkUpdater {
                 }
                 return false;
             })
-            .toList(); // now we have links which was updated and return them
+            .map(link -> new LinkUpdate(link.id(), link.name(),
+                jdbcChatToLinkDao.findByLinkId(link.id()).stream().map(ChatToLinkDto::chatId).toList()
+            ))
+            .toList();
     }
 }

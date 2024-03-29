@@ -1,11 +1,11 @@
 package edu.java.scrapper.service.jpa;
 
 import edu.java.scrapper.dto.scrapper.Link;
-import edu.java.scrapper.entity.Chat;
 import edu.java.scrapper.repository.ChatRepository;
 import edu.java.scrapper.repository.LinkRepository;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,8 +26,21 @@ public class JpaLinkService implements LinkService {
     @Transactional
     public void add(long tgChatId, long linkId, URI url) {
         var l = linkRepository.findById(linkId);
-        var newLink = l.orElseGet(() -> new edu.java.scrapper.entity.Link(linkId, url.toString()));
-        newLink.getFollowingChats().add(new Chat(tgChatId, "default"));
+        var newLink = l
+            .orElseGet(() -> new edu.java.scrapper.entity.Link(
+                linkId,
+                url.toString(),
+                System.currentTimeMillis(),
+                OffsetDateTime.now()
+            ));
+
+        var chat = chatRepository.findById(tgChatId).orElse(null);
+        newLink.getFollowingChats().add(chat);
+
+        if (chat != null) {
+            chat.getFollowingLinks().add(newLink);
+        }
+
         if (l.isEmpty()) {
             linkRepository.save(newLink);
         }
@@ -37,7 +50,13 @@ public class JpaLinkService implements LinkService {
     @Transactional
     public void remove(long tgChatId, long linkId) {
         var chat = chatRepository.findById(tgChatId);
-        chat.ifPresent(value -> value.getFollowingLinks().remove(linkRepository.findById(linkId).orElse(null)));
+        chat.ifPresent(value -> {
+            var link = linkRepository.findById(linkId).orElse(null);
+            value.getFollowingLinks().remove(link);
+            if (link != null) {
+                link.getFollowingChats().remove(value);
+            }
+        });
     }
 
     @Override

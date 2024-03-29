@@ -1,6 +1,6 @@
 package edu.java.scrapper.service.interfaces;
 
-import edu.java.scrapper.dto.jdbc.LinkDto;
+import edu.java.scrapper.dto.bot.LinkUpdate;
 import java.util.List;
 
 public interface LinkUpdater {
@@ -9,5 +9,5 @@ public interface LinkUpdater {
     String STACK = "https://stackoverflow.com";
     String SITE = "stackoverflow";
 
-    List<LinkDto> update();
+    List<LinkUpdate> update();
 }
