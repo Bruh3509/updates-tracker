@@ -10,8 +10,4 @@ public interface JdbcDao<T> {
     List<T> findAll();
 
     List<T> findAll(long id);
-
-    void updateModification(T t);
-
-    void updateCheck(T t);
 }
