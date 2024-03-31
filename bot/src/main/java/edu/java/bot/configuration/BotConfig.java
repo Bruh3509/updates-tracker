@@ -10,17 +10,19 @@ import edu.java.bot.commands.Track;
 import edu.java.bot.commands.Untrack;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 
 @Configuration
 @ComponentScan("edu.java.bot.commands")
 @Slf4j
+@EnableCaching
 public class BotConfig {
-    private static final ApplicationConfig CONFIG =
-        new ApplicationConfig("6965503493:AAFSpi1u2oqaLHbpQ9-TTaD7vro60GJ4Aio");
+    @Value("${app.telegram-token}")
+    private String token;
     @Autowired
     private Start start;
     @Autowired
@@ -33,9 +35,8 @@ public class BotConfig {
     private Help help;
 
     @Bean
-    @Scope("singleton")
     public TelegramBot bot() {
-        TelegramBot bot = new TelegramBot(CONFIG.telegramToken());
+        TelegramBot bot = new TelegramBot(token);
 
         BotCommand startCommand = new BotCommand(start.command(), start.description());
         BotCommand trackCommand = new BotCommand(track.command(), track.description());

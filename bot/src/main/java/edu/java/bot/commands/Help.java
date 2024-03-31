@@ -3,11 +3,9 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("")
 public class Help implements Command {
     private static final String HELP_RESPONSE = """
         `/start` --> starts the bot

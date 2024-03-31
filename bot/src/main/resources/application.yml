@@ -1,17 +1,39 @@
 app:
   telegram-token: 6965503493:AAFSpi1u2oqaLHbpQ9-TTaD7vro60GJ4Aio
+  retry:
+    max-attempts: 10
+    delay: 400
+    exponential: 2
 
 spring:
   application:
     name: bot
   jackson:
     time-zone: UTC
+  cache:
+    cache-names:
+      - buckets
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=3600s
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
   default-produces-media-type: application/json
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: buckets
+      url: /*
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API Request Quota\" }"
+      rate-limits:
+        - cache-key: "getHeader('X-Forwarded-For')"
+          bandwidths:
+            - capacity: 5
+              time: 5
+              unit: minutes
 server:
   port: 8090
+  forward-headers-strategy: NATIVE
 
 logging:
   config: classpath:log4j2-plain.xml

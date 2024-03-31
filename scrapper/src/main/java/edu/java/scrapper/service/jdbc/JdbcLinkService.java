@@ -41,7 +41,7 @@ public class JdbcLinkService implements LinkService {
             .stream()
             .map(cur -> {
                 var linkDto = jdbcLinkDao.findAll(cur.linkId()).getFirst();
-                return new Link(linkDto.id(), linkDto.name());
+                return new Link(linkDto.id(), URI.create(linkDto.name()));
             })
             .toList();
     }

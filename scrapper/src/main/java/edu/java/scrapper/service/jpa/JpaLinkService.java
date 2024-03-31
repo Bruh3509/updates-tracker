@@ -69,7 +69,7 @@ public class JpaLinkService implements LinkService {
                 .getFollowingChats()
                 .stream()
                 .anyMatch(chat -> chat.getChatId() == tgChatId))
-            .map(link -> new Link(link.getId(), link.getName()))
+            .map(link -> new Link(link.getId(), URI.create(link.getName())))
             .toList();
     }
 }
