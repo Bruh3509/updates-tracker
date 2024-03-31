@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
 @Configuration
 @EnableTransactionManagement
-@EnableCaching
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JpaConfig {

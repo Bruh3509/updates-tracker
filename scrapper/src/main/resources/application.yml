@@ -31,14 +31,14 @@ bucket4j:
   enabled: true
   filters:
     - cache-name: buckets
-      url: /*
+      url: /.*
       http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API Request Quota\" }"
       rate-limits:
-        - cache-key: "getHeader('X-Forwarded-For')"
-          bandwidths:
+        - bandwidths:
             - capacity: 5
               time: 5
               unit: minutes
+              refill-speed: interval
 
 
 
