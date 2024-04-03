@@ -8,6 +8,15 @@ app:
     max-attempts: 10
     delay: 400
     exponential: 2
+  kafka:
+    bootstrap-servers: localhost:9092
+    client-id: updates-tracker
+    acks-mode: all
+    delivery-timeout: 60s
+    linger-ms: 12_000
+    batch-size: 100_000
+    max-in-flight-per-connection: 5
+    enable-idempotence: true
 
 spring:
   application:
@@ -27,6 +36,7 @@ spring:
       - buckets
     caffeine:
       spec: maximumSize=100000,expireAfterAccess=3600s
+
 bucket4j:
   enabled: true
   filters:
@@ -39,7 +49,6 @@ bucket4j:
               time: 5
               unit: minutes
               refill-speed: interval
-
 
 
 springdoc:
