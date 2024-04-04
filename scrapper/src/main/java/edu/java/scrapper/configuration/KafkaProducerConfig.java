@@ -1,9 +1,15 @@
 package edu.java.scrapper.configuration;
 
+import edu.java.scrapper.clients.BotClient;
 import edu.java.scrapper.dto.bot.LinkUpdate;
+import edu.java.scrapper.kafka.ScrapperQueueProducer;
+import edu.java.scrapper.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.service.send.HttpService;
+import edu.java.scrapper.service.send.KafkaService;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -14,8 +20,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @Configuration
+@ComponentScan
 public class KafkaProducerConfig {
-
     @Bean
     public ProducerFactory<String, LinkUpdate> producerFactory(ApplicationConfig config) {
         var kafka = config.kafka();
@@ -37,5 +43,18 @@ public class KafkaProducerConfig {
     @Bean
     public KafkaTemplate<String, LinkUpdate> kafkaTemplate(ProducerFactory<String, LinkUpdate> producerFactory) {
         return new KafkaTemplate<>(producerFactory);
+    }
+
+    @Bean
+    public SendUpdatesService sendUpdatesService(
+        ApplicationConfig config,
+        ScrapperQueueProducer queueProducer,
+        BotClient botClient
+    ) {
+        if (config.useQueue()) {
+            return new KafkaService(queueProducer);
+        }
+
+        return new HttpService(botClient);
     }
 }
