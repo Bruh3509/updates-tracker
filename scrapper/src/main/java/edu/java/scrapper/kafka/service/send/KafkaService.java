@@ -1,8 +1,8 @@
-package edu.java.scrapper.service.send;
+package edu.java.scrapper.kafka.service.send;
 
 import edu.java.scrapper.dto.bot.LinkUpdate;
-import edu.java.scrapper.kafka.ScrapperQueueProducer;
-import edu.java.scrapper.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.kafka.producers.ScrapperQueueProducer;
+import edu.java.scrapper.kafka.service.interfaces.SendUpdatesService;
 import java.util.List;
 
 public class KafkaService implements SendUpdatesService {

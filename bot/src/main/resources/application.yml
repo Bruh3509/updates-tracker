@@ -4,6 +4,10 @@ app:
     max-attempts: 10
     delay: 400
     exponential: 2
+  kafka:
+    bootstrap-servers: localhost:9092
+    client-id: user
+  use-queue: false
 
 spring:
   application:

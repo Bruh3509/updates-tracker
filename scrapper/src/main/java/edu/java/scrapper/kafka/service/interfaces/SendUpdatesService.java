@@ -1,4 +1,4 @@
-package edu.java.scrapper.service.interfaces;
+package edu.java.scrapper.kafka.service.interfaces;
 
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import java.util.List;

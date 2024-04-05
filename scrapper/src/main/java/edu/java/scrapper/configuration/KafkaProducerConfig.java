@@ -1,11 +1,11 @@
 package edu.java.scrapper.configuration;
 
 import edu.java.scrapper.clients.BotClient;
-import edu.java.scrapper.dto.bot.LinkUpdate;
-import edu.java.scrapper.kafka.ScrapperQueueProducer;
-import edu.java.scrapper.service.interfaces.SendUpdatesService;
-import edu.java.scrapper.service.send.HttpService;
-import edu.java.scrapper.service.send.KafkaService;
+import edu.java.scrapper.dto.bot.LinkUpdateJson;
+import edu.java.scrapper.kafka.producers.ScrapperQueueProducer;
+import edu.java.scrapper.kafka.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.kafka.service.send.HttpService;
+import edu.java.scrapper.kafka.service.send.KafkaService;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -21,7 +21,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 @ComponentScan
 public class KafkaProducerConfig {
     @Bean
-    public ProducerFactory<String, LinkUpdate> producerFactory(ApplicationConfig config) {
+    public ProducerFactory<String, LinkUpdateJson> producerFactory(ApplicationConfig config) {
         var kafka = config.kafka();
         return new DefaultKafkaProducerFactory<>(Map.ofEntries(
             Map.entry(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.bootstrapServers()),
@@ -39,7 +39,9 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, LinkUpdate> kafkaTemplate(ProducerFactory<String, LinkUpdate> producerFactory) {
+    public KafkaTemplate<String, LinkUpdateJson> kafkaTemplate(
+        ProducerFactory<String, LinkUpdateJson> producerFactory
+    ) {
         return new KafkaTemplate<>(producerFactory);
     }
 

@@ -1,9 +1,9 @@
-package edu.java.scrapper.service.send;
+package edu.java.scrapper.kafka.service.send;
 
 import edu.java.scrapper.clients.BotClient;
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.dto.bot.PostRequest;
-import edu.java.scrapper.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.kafka.service.interfaces.SendUpdatesService;
 import java.util.List;
 import static edu.java.scrapper.shedule.LinkUpdaterScheduler.NEW_UPDATE;
 
