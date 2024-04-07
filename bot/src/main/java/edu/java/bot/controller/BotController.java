@@ -1,8 +1,5 @@
 package edu.java.bot.controller;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.ParseMode;
-import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.bot.BotSendUpdate;
 import edu.java.bot.dto.bot.PostRequest;
 import edu.java.bot.dto.bot.SendUpdateDto;

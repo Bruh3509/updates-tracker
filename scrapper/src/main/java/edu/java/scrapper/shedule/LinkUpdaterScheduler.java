@@ -1,7 +1,7 @@
 package edu.java.scrapper.shedule;
 
-import edu.java.scrapper.service.interfaces.LinkUpdater;
 import edu.java.scrapper.kafka.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.service.interfaces.LinkUpdater;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
