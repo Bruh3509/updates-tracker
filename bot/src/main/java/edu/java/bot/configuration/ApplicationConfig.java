@@ -25,13 +25,11 @@ public record ApplicationConfig(
 
     public record Kafka(
         @NotNull String bootstrapServers,
-        @NotNull String clientId,
-        @NotNull String acksMode,
-        @NotNull Duration deliveryTimeout,
-        @NotNull int lingerMs,
-        @NotNull int batchSize,
-        @NotNull int maxInFlightPerConnection,
-        @NotNull boolean enableIdempotence
+        @NotNull String groupId,
+        @NotNull String autoOffsetReset,
+        @NotNull int maxPollIntervalMs,
+        @NotNull boolean enableAutoCommit,
+        @NotNull int concurrency
     ) {
     }
 }

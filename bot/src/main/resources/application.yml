@@ -6,7 +6,11 @@ app:
     exponential: 2
   kafka:
     bootstrap-servers: localhost:9092
-    client-id: user
+    group-id: updates-tracker-user
+    auto-offset-reset: latest
+    max-poll-interval-ms: 300_000
+    enable-auto-commit: false
+    concurrency: 1
   use-queue: false
 
 spring:

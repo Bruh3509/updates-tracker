@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Configuration
@@ -32,7 +33,6 @@ public class KafkaProducerConfig {
             Map.entry(ProducerConfig.BATCH_SIZE_CONFIG, kafka.batchSize()),
             Map.entry(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, kafka.maxInFlightPerConnection()),
             Map.entry(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, kafka.enableIdempotence()),
-            Map.entry(JsonSerializer.ADD_TYPE_INFO_HEADERS, false),
             Map.entry(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class),
             Map.entry(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class)
         ));
