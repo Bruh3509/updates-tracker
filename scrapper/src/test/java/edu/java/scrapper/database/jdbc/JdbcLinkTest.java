@@ -61,7 +61,7 @@ class JdbcLinkTest extends IntegrationTest {
         linkService.remove(42, link.hashCode());
         assertThat(linkService.listAll(41)).containsExactly(new Link(
             (long) link.hashCode(),
-            link
+            URI.create(link)
         ));
     }
 
@@ -76,7 +76,7 @@ class JdbcLinkTest extends IntegrationTest {
         linkService.remove(42, stack.hashCode());
         assertThat(linkService.listAll(42)).containsExactly(new Link(
             (long) git.hashCode(),
-            git
+            URI.create(git)
         ));
     }
 }
