@@ -8,11 +8,9 @@ import edu.java.bot.dto.scrapper.Link;
 import edu.java.bot.dto.scrapper.PostRequest;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("")
 public class Untrack implements Command {
     private static final String UNTRACK_SUCCESS = """
         Successfully untracked!
@@ -52,7 +50,7 @@ public class Untrack implements Command {
             scrapperClient.deleteLink(
                 update.chatId(),
                 new PostRequest(new Link(
-                    userInput.hashCode(),
+                    (long) userInput.hashCode(),
                     URI.create(userInput)
                 ))
             );

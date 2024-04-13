@@ -6,7 +6,7 @@ import edu.java.scrapper.dto.scrapper.ScrapperPostRequest;
 import edu.java.scrapper.dto.scrapper.ScrapperPostResponse;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
-import java.net.URI;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Component
 @RestController
+@Slf4j
 public class ScrapperController {
     private final ChatService chatService;
     private final LinkService linkService;
@@ -62,10 +63,11 @@ public class ScrapperController {
         @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody ScrapperPostRequest request
     ) {
-        var link = request.link();
-        linkService.add(id, link.hashCode(), URI.create(link));
+        log.info("Adding link");
+        var link = request.link().url();
+        linkService.add(id, link.toString().hashCode(), link);
         return new ResponseEntity<>(
-            new ScrapperPostResponse(id, request.link()),
+            new ScrapperPostResponse(id, link),
             HttpStatus.OK
         );
     }
@@ -75,9 +77,9 @@ public class ScrapperController {
         @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody ScrapperPostRequest link
     ) {
-        linkService.remove(id, link.link().hashCode());
+        linkService.remove(id, link.link().url().toString().hashCode());
         return new ResponseEntity<>(
-            new ScrapperDeleteResponse(id, link.link()),
+            new ScrapperDeleteResponse(id, link.link().url()),
             HttpStatus.OK
         );
     }

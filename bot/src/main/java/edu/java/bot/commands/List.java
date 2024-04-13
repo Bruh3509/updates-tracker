@@ -5,13 +5,12 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.clients.ScrapperClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("")
 public class List implements Command {
-    ScrapperClient scrapperClient;
+    private static final String NO_LINKS = "You're not following anything!\n";
+    private final ScrapperClient scrapperClient;
 
     @Autowired
     public List(ScrapperClient scrapperClient) {
@@ -21,10 +20,14 @@ public class List implements Command {
     private String getLinks(Long id) {
         var response = scrapperClient.getAllLinks(id);
         var links = response.getBody().links();
-        StringBuilder result = new StringBuilder();
-        links.forEach(link -> result.append("`%s`\n".formatted(link.url().toString())));
+        if (!links.isEmpty()) {
+            StringBuilder result = new StringBuilder();
+            links.forEach(link -> result.append("`%s`\n".formatted(link.url().toString())));
 
-        return result.toString();
+            return result.toString();
+        }
+
+        return NO_LINKS;
     }
 
     public String command() {
