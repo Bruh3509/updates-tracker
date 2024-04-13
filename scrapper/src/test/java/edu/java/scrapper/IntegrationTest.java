@@ -1,27 +1,27 @@
 package edu.java.scrapper;
 
+import java.io.File;
+import java.sql.DriverManager;
+import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
+import edu.java.scrapper.dto.jdbc.LinkDto;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
 import liquibase.database.Database;
-import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.DirectoryResourceAccessor;
-import liquibase.resource.ResourceAccessor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import java.io.File;
-import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
@@ -68,6 +68,8 @@ public abstract class IntegrationTest {
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
     }
+
+
 }
 
 class SimpleIntTest extends IntegrationTest {
