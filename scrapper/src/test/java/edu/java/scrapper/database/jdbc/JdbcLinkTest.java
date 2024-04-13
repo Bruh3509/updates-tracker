@@ -79,6 +79,4 @@ class JdbcLinkTest extends IntegrationTest {
             git
         ));
     }
-
-
 }

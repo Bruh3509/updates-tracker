@@ -34,18 +34,6 @@ public class JdbcChatDao implements JdbcDao<ChatDto> {
 
     @Override
     @Transactional
-    public void updateModification(ChatDto chatDto) {
-        // TODO ???
-    }
-
-    @Override
-    @Transactional
-    public void updateCheck(ChatDto chatDto) {
-        // TODO ???
-    }
-
-    @Override
-    @Transactional
     public List<ChatDto> findAll() {
         String sql = "SELECT * FROM chat";
         return jdbcTemplate.query(

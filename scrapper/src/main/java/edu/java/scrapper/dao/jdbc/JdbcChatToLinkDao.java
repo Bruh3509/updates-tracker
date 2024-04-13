@@ -54,18 +54,6 @@ public class JdbcChatToLinkDao implements JdbcDao<ChatToLinkDto> {
 
     @Override
     @Transactional
-    public void updateModification(ChatToLinkDto chatToLinkDto) {
-       // TODO ???
-    }
-
-    @Override
-    @Transactional
-    public void updateCheck(ChatToLinkDto chatToLinkDto) {
-        // TODO ???
-    }
-
-    @Override
-    @Transactional
     public List<ChatToLinkDto> findAll() {
         String sql = "SELECT * FROM chat_to_link";
         return jdbcTemplate.query(

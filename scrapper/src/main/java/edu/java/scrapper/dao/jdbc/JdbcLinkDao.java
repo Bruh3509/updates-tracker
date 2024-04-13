@@ -36,14 +36,12 @@ public class JdbcLinkDao implements JdbcDao<LinkDto> {
         jdbcTemplate.update(sql, id);
     }
 
-    @Override
     @Transactional
     public void updateModification(LinkDto linkDto) {
         String sql = "UPDATE link SET last_update=? WHERE link_id=?";
         jdbcTemplate.update(sql, linkDto.lastUpdate(), linkDto.id());
     }
 
-    @Override
     @Transactional
     public void updateCheck(LinkDto linkDto) {
         String sql = "UPDATE link SET last_check=? WHERE link_id=?";
@@ -64,7 +62,7 @@ public class JdbcLinkDao implements JdbcDao<LinkDto> {
                     OffsetDateTime.ofInstant(
                         resultSet.getTimestamp("last_update").toInstant(),
                         ZoneId.systemDefault()
-                    ) // TODO how to get real zoneid ???
+                    )
                 )
         );
     }
@@ -83,7 +81,7 @@ public class JdbcLinkDao implements JdbcDao<LinkDto> {
                     OffsetDateTime.ofInstant(
                         resultSet.getTimestamp("last_update").toInstant(),
                         ZoneId.systemDefault()
-                    ) // TODO how to get real zoneid ???
+                    )
                 ),
             id
         );
