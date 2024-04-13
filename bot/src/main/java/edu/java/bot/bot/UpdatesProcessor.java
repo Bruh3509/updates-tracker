@@ -1,80 +1,124 @@
 package edu.java.bot.bot;
 
+// TODO DI of commands and track, untrack logic (maybe make additioanl class to just print in first call).
+
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.commands.Command;
 import edu.java.bot.commands.Help;
 import edu.java.bot.commands.List;
 import edu.java.bot.commands.Start;
 import edu.java.bot.commands.Track;
+import edu.java.bot.commands.TrackInfo;
 import edu.java.bot.commands.Unknown;
 import edu.java.bot.commands.Untrack;
-import java.util.ArrayList;
-import lombok.Getter;
+import edu.java.bot.commands.UntrackInfo;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
+@Slf4j
 public class UpdatesProcessor {
+    private static Map<Long, UserState> usersState;
+    private static TelegramBot bot;
+    private static Help help;
+    private static List list;
+    private static Start start;
+    private static Track track;
+    private static Unknown unknown;
+    private static Untrack untrack;
+    private static TrackInfo trackInfo;
+    private static UntrackInfo untrackInfo;
 
-    @Getter private static final java.util.List<String> FOLLOWING_LINKS = new ArrayList<>();
-    // временное хранилище отслеживаемых ссылок
-    // пока не подключится БД
-    //private static Command.Name prevCommand = Command.Name.START;
-    private static boolean isTrackOrUntrack = false;
-    private static Command prevCommandObj;
+    @Autowired
+    @SuppressWarnings({"ParameterNumber"})
+    public void init(
+        TelegramBot bot,
+        Help help,
+        List list,
+        Start start,
+        Track track,
+        Unknown unknown,
+        Untrack untrack,
+        TrackInfo trackInfo,
+        UntrackInfo untrackInfo
+    ) {
+        usersState = new HashMap<>();
+        UpdatesProcessor.bot = bot;
+        bot.setUpdatesListener(updates -> {
+            updates.forEach(update -> {
+                log.info(update.toString());
+                UpdatesProcessor.process(new UpdateWrapper(update), bot);
+            });
+            return UpdatesListener.CONFIRMED_UPDATES_ALL;
+        });
+        UpdatesProcessor.help = help;
+        UpdatesProcessor.list = list;
+        UpdatesProcessor.start = start;
+        UpdatesProcessor.track = track;
+        UpdatesProcessor.unknown = unknown;
+        UpdatesProcessor.untrack = untrack;
+        UpdatesProcessor.trackInfo = trackInfo;
+        UpdatesProcessor.untrackInfo = untrackInfo;
+    }
 
     public static void process(UpdateWrapper update, TelegramBot bot) {
-        if (update.message() == null) { // stub
+        usersState.putIfAbsent(update.chatId(), new UserState(false, null));
+        if (update.message() == null) {
+            log.info("No message update");
             return;
         }
-        if (!isTrackOrUntrack) {
+        if (!usersState.get(update.chatId()).isTrackOrUntrack) {
             Command command = identifyCommand(update);
             bot.execute(command.handle(update));
         } else {
-            bot.execute(prevCommandObj.handle(update));
-            isTrackOrUntrack = false;
+            bot.execute(usersState.get(update.chatId()).prevCommandObj.handle(update));
+            usersState.get(update.chatId()).isTrackOrUntrack = false;
         }
     }
 
     private static Command identifyCommand(UpdateWrapper update) {
         return switch (update.messageText()) {
             case "/start" -> {
-                //prevCommand = Command.Name.START;
-                yield new Start();
+                yield start;
             }
             case "/help" -> {
-                //prevCommand = Command.Name.HELP;
-                yield new Help();
+                yield help;
             }
             case "/track" -> {
-                //prevCommand = Command.Name.TRACK;
-                prevCommandObj = new Track();
-                isTrackOrUntrack = true;
-                yield prevCommandObj;
+                var cur = usersState.get(update.chatId());
+                cur.prevCommandObj = track;
+                cur.isTrackOrUntrack = true;
+                yield trackInfo;
             }
             case "/untrack" -> {
-                //prevCommand = Command.Name.UNTRACK;
-                prevCommandObj = new Untrack();
-                isTrackOrUntrack = true;
-                yield prevCommandObj;
+                var cur = usersState.get(update.chatId());
+                cur.prevCommandObj = untrack;
+                cur.isTrackOrUntrack = true;
+                yield untrackInfo;
             }
             case "/list" -> {
-                //prevCommand = Command.Name.LIST;
-                yield new List();
+                yield list;
             }
-            default -> new Unknown();
+            default -> unknown;
         };
     }
 
-    // TODO перенес методы в соответсвующие классы (не уверен)
-    /*
-    private static void track(String link) {
-        FOLLOWING_LINKS.add(link);
-    }
-
-    private static void untrack(String link) {
-        FOLLOWING_LINKS.remove(link);
-    }
-     */
-
     private UpdatesProcessor() {
     }
+
+    static class UserState {
+        boolean isTrackOrUntrack;
+        Command prevCommandObj;
+
+        UserState(boolean isTrackOrUntrack, Command prevCommandObj) {
+            this.isTrackOrUntrack = isTrackOrUntrack;
+            this.prevCommandObj = prevCommandObj;
+        }
+    }
+
 }

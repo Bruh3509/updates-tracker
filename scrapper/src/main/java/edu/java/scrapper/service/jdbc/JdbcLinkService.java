@@ -10,16 +10,12 @@ import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JdbcLinkService implements LinkService {
     private final JdbcChatToLinkDao jdbcChatToLinkDao;
     private final JdbcLinkDao jdbcLinkDao;
     private final JdbcChatDao jdbcChatDao;
 
-    @Autowired
     public JdbcLinkService(JdbcChatToLinkDao jdbcChatToLinkDao, JdbcLinkDao jdbcLinkDao, JdbcChatDao jdbcChatDao) {
         this.jdbcChatToLinkDao = jdbcChatToLinkDao;
         this.jdbcLinkDao = jdbcLinkDao;
@@ -27,15 +23,15 @@ public class JdbcLinkService implements LinkService {
     }
 
     @Override
-    public void add(long tgChatId, URI url) {
-        long linkId = linkId(url);
+    public void add(long tgChatId, long linkId, URI url) {
+        //long linkId = linkId(url);
         jdbcLinkDao.add(new LinkDto(linkId, url.toString(), System.currentTimeMillis(), OffsetDateTime.now()));
         jdbcChatToLinkDao.add(new ChatToLinkDto(tgChatId, linkId));
     }
 
     @Override
-    public void remove(long tgChatId, URI url) {
-        jdbcChatToLinkDao.remove(tgChatId, linkId(url));
+    public void remove(long tgChatId, long linkId) {
+        jdbcChatToLinkDao.remove(tgChatId, linkId);
     }
 
     @Override
@@ -43,9 +39,9 @@ public class JdbcLinkService implements LinkService {
         var listOfLinks = jdbcChatToLinkDao.findAll(tgChatId);
         return listOfLinks
             .stream()
-            .map(cur ->  {
+            .map(cur -> {
                 var linkDto = jdbcLinkDao.findAll(cur.linkId()).getFirst();
-                return new Link(linkDto.id(), linkDto.name());
+                return new Link(linkDto.id(), URI.create(linkDto.name()));
             })
             .toList();
     }

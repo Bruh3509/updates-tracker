@@ -2,15 +2,15 @@ package edu.java.scrapper.configuration;
 
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
-import edu.java.scrapper.dao.jdbc.JdbcChatDao;
-import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
-import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
+import edu.java.scrapper.repository.ChatRepository;
+import edu.java.scrapper.repository.LinkRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
-import edu.java.scrapper.service.jdbc.JdbcChatService;
-import edu.java.scrapper.service.jdbc.JdbcLinkService;
-import edu.java.scrapper.service.jdbc.JdbcLinkUpdater;
+import edu.java.scrapper.service.jpa.JpaChatService;
+import edu.java.scrapper.service.jpa.JpaLinkService;
+import edu.java.scrapper.service.jpa.JpaLinkUpdater;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,19 +19,20 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Slf4j
-@ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
+@ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jpa")
 @Configuration
 @EnableTransactionManagement
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
-public class JdbcConfig {
+public class JpaConfig {
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
     @Value("${spring.datasource.username}")
@@ -52,38 +53,41 @@ public class JdbcConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("edu.java.scrapper.entity");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return em;
     }
 
     @Bean
-    public LinkService linkService(
-        JdbcLinkDao jdbcLinkDao,
-        JdbcChatDao jdbcChatDao,
-        JdbcChatToLinkDao jdbcChatToLinkDao
+    LinkService linkService(
+        LinkRepository linkRepository,
+        ChatRepository chatRepository
     ) {
-        return new JdbcLinkService(jdbcChatToLinkDao, jdbcLinkDao, jdbcChatDao);
+        return new JpaLinkService(linkRepository, chatRepository);
     }
 
     @Bean
-    public ChatService chatService(
-        JdbcChatDao jdbcChatDao
-    ) {
-        return new JdbcChatService(jdbcChatDao);
+    ChatService chatService(ChatRepository chatRepository) {
+        return new JpaChatService(chatRepository);
     }
 
     @Bean
-    public LinkUpdater linkUpdater(
+    LinkUpdater linkUpdater(
         @Qualifier("github") GitHubClient gitHubClient,
         @Qualifier("stackoverflow") StackOverflowClient stackOverflowClient,
-        JdbcLinkDao jdbcLinkDao,
-        JdbcChatToLinkDao jdbcChatToLinkDao
+        LinkRepository linkRepository
     ) {
-        return new JdbcLinkUpdater(gitHubClient, stackOverflowClient, jdbcLinkDao, jdbcChatToLinkDao);
+        return new JpaLinkUpdater(gitHubClient, stackOverflowClient, linkRepository);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
+        var transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+
+        return transactionManager;
     }
 }

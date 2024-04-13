@@ -1,14 +1,12 @@
-package edu.java.scrapper.database.jdbc;
+package edu.java.scrapper.database.jpa;
 
 import edu.java.scrapper.IntegrationTest;
-
-import java.net.URI;
-
-import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.entity.Chat;
+import edu.java.scrapper.repository.ChatRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
-import org.junit.jupiter.api.BeforeAll;
+import edu.java.scrapper.service.jpa.JpaLinkService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +16,17 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled
 @SpringBootTest
-class JdbcLinkTest extends IntegrationTest {
+public class JpaLinkTest extends IntegrationTest {
     @DynamicPropertySource
-    static void setJdbcAccessType(DynamicPropertyRegistry registry) {
-        registry.add("app.database-access-type", () -> "jdbc");
+    static void setJpaAccessType(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jpa");
     }
 
     @Autowired
@@ -34,7 +34,7 @@ class JdbcLinkTest extends IntegrationTest {
     @Autowired
     private ChatService chatService;
     @Autowired
-    private JdbcChatDao chatDao;
+    private ChatRepository chatRepository;
 
     @Test
     @Transactional
@@ -44,8 +44,8 @@ class JdbcLinkTest extends IntegrationTest {
         chatService.register(42, "default");
         linkService.add(42, link.hashCode(), URI.create(link));
         assertThat(linkService.listAll(42)).containsExactly(new Link(
-                (long) link.hashCode(),
-                URI.create(link)
+            (long) link.hashCode(),
+            URI.create(link)
         ));
         linkService.remove(42, link.hashCode());
         assertThat(linkService.listAll(42)).isEmpty();
@@ -79,4 +79,5 @@ class JdbcLinkTest extends IntegrationTest {
             URI.create(git)
         ));
     }
+
 }

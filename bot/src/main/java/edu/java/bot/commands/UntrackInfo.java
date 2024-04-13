@@ -6,27 +6,22 @@ import edu.java.bot.apiwrapper.UpdateWrapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Help implements Command {
-    private static final String HELP_RESPONSE = """
-        `/start` --> starts the bot
-        `/help` --> list of commands
-        `/track` --> follow new resource
-        `/untrack` --> stop following resource\s
-        `/list` --> list of following resources""";
+public class UntrackInfo implements Command {
+    private static final String UNTRACK_RESPONSE = "Enter `link` to stop follow!";
 
     @Override
     public String command() {
-        return "/help";
+        return null;
     }
 
     @Override
     public String description() {
-        return "List of commands";
+        return null;
     }
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        return new SendMessage(update.chatId(), HELP_RESPONSE)
+        return new SendMessage(update.chatId(), UNTRACK_RESPONSE)
             .parseMode(ParseMode.Markdown);
     }
 }

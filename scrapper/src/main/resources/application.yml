@@ -3,16 +3,46 @@ app:
     enable: true
     interval: 5000
     force-check-delay: 10s
+  database-access-type: jdbc
+  retry:
+    max-attempts: 10
+    delay: 400
+    exponential: 2
 
 spring:
   application:
     name: scrapper
   liquibase:
     enabled: false
+    
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        
   datasource:
     url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: postgres
+  cache:
+    cache-names:
+      - buckets
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=3600s
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: buckets
+      url: /.*
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API Request Quota\" }"
+      rate-limits:
+        - bandwidths:
+            - capacity: 5
+              time: 5
+              unit: minutes
+              refill-speed: interval
+
+
 
 springdoc:
   swagger-ui:
@@ -20,6 +50,10 @@ springdoc:
   default-produces-media-type: application/json
 server:
   port: 8080
+  forward-headers-strategy: NATIVE
 
 logging:
   config: classpath:log4j2-plain.xml
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
