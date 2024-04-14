@@ -15,10 +15,12 @@ spring:
       - buckets
     caffeine:
       spec: maximumSize=100000,expireAfterAccess=3600s
+
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
   default-produces-media-type: application/json
+
 bucket4j:
   enabled: true
   filters:
@@ -31,6 +33,29 @@ bucket4j:
               time: 5
               unit: minutes
               refill-speed: interval
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: "/"
+      exposure:
+        include: "info,health,prometheus"
+      path-mapping:
+        prometheus: "metrics"
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8082
+
 server:
   port: 8090
   forward-headers-strategy: NATIVE
