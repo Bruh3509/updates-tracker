@@ -51,11 +51,33 @@ bucket4j:
               unit: minutes
               refill-speed: interval
 
-
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
   default-produces-media-type: application/json
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: "/"
+      exposure:
+        include: "info,health,prometheus"
+      path-mapping:
+        prometheus: "metrics"
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  server:
+    port: 8081
+
 server:
   port: 8080
   forward-headers-strategy: NATIVE
