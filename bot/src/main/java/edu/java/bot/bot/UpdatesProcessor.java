@@ -14,6 +14,8 @@ import edu.java.bot.commands.TrackInfo;
 import edu.java.bot.commands.Unknown;
 import edu.java.bot.commands.Untrack;
 import edu.java.bot.commands.UntrackInfo;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +47,8 @@ public class UpdatesProcessor {
         Unknown unknown,
         Untrack untrack,
         TrackInfo trackInfo,
-        UntrackInfo untrackInfo
+        UntrackInfo untrackInfo,
+        MeterRegistry meterRegistry
     ) {
         usersState = new HashMap<>();
         UpdatesProcessor.bot = bot;
@@ -53,6 +56,7 @@ public class UpdatesProcessor {
             updates.forEach(update -> {
                 log.info(update.toString());
                 UpdatesProcessor.process(new UpdateWrapper(update), bot);
+                Counter.builder("messages.counter").register(meterRegistry).increment();
             });
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
