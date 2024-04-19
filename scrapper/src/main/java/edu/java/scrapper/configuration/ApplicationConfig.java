@@ -13,7 +13,11 @@ public record ApplicationConfig(
     @NotNull
     AccessType databaseAccessType,
     @NotNull
-    Retry retry
+    Retry retry,
+    @NotNull
+    Kafka kafka,
+    @NotNull
+    boolean useQueue
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -23,5 +27,17 @@ public record ApplicationConfig(
     }
 
     public record Retry(@NotNull int maxAttempts, @NotNull long delay, @NotNull long exponential) {
+    }
+
+    public record Kafka(
+        @NotNull String bootstrapServers,
+        @NotNull String clientId,
+        @NotNull String acksMode,
+        @NotNull Duration deliveryTimeout,
+        @NotNull int lingerMs,
+        @NotNull int batchSize,
+        @NotNull int maxInFlightPerConnection,
+        @NotNull boolean enableIdempotence
+    ) {
     }
 }

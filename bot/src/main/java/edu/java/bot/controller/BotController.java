@@ -1,9 +1,8 @@
 package edu.java.bot.controller;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.model.request.ParseMode;
-import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.bot.BotSendUpdate;
 import edu.java.bot.dto.bot.PostRequest;
+import edu.java.bot.dto.bot.SendUpdateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,23 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class BotController {
-    private final TelegramBot bot;
+    private final BotSendUpdate sendUpdate;
 
     @Autowired
-    public BotController(TelegramBot bot) {
-        this.bot = bot;
+    public BotController(BotSendUpdate sendUpdate) {
+        this.sendUpdate = sendUpdate;
     }
 
     @PostMapping(value = "/updates", consumes = "application/json")
     public ResponseEntity<Void> sendUpdate(@RequestBody PostRequest updateRequest) {
-        updateRequest
-            .tgChatIds()
-            .forEach(chatId -> {
-                bot.execute(new SendMessage(
-                    chatId,
-                    String.format("New update: `%s`!", updateRequest.url())
-                ).parseMode(ParseMode.Markdown));
-            });
+        sendUpdate.sendUpdate(new SendUpdateDto(updateRequest.tgChatIds(), updateRequest.url()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
