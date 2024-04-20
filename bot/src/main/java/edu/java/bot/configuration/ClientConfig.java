@@ -18,7 +18,6 @@ import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
-@EnableCaching
 public class ClientConfig {
     public static final String BASE_URL = "http://localhost:8080";
     private static final String HEADER = "X-Forwarded-For";

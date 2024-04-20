@@ -8,7 +8,6 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-@EnableCaching
 public record ApplicationConfig(
     @NotEmpty
     String telegramToken,

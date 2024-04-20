@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("edu.java.bot.commands")
 @Slf4j
-@EnableCaching
 public class BotConfig {
     @Value("${app.telegram-token}")
     private String token;
