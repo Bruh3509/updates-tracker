@@ -20,7 +20,6 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 @Configuration
 @ComponentScan
-@EnableCaching
 public class KafkaProducerConfig {
     @Bean
     public ProducerFactory<String, LinkUpdateJson> producerFactory(ApplicationConfig config) {

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableCaching
 public class CacheConfiguration {
     private static final Long CACHE_DURATION = 60L;
 

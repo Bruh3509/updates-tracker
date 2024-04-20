@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ConditionalOnProperty(prefix = "app", name = "database-access-type", havingValue = "jdbc")
 @Configuration
 @EnableTransactionManagement
-@EnableCaching
 @ComponentScan
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcConfig {
