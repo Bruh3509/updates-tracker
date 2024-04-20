@@ -31,6 +31,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScrapperController {
 
     private static final String CACHE_NAME = "buckets";
+    private static final Long TOKENS_1 = 10L;
+    private static final Long TOKENS_2 = 5L;
+    private static final Long DURATION = 20L;
 
     private final ChatService chatService;
     private final LinkService linkService;
@@ -135,8 +138,8 @@ public class ScrapperController {
 
     private Bucket bucketSupplier() {
         return Bucket.builder()
-            .addLimit(Bandwidth.classic(10, Refill.intervally(10, Duration.ofMinutes(1))))
-            .addLimit(Bandwidth.classic(5, Refill.intervally(5, Duration.ofSeconds(20))))
+            .addLimit(Bandwidth.classic(TOKENS_1, Refill.intervally(TOKENS_1, Duration.ofMinutes(1))))
+            .addLimit(Bandwidth.classic(TOKENS_2, Refill.intervally(TOKENS_2, Duration.ofSeconds(DURATION))))
             .build();
     }
 

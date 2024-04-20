@@ -10,9 +10,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
+    private static final Long CACHE_DURATION = 60L;
+
     @Bean
     public Caffeine caffeineConfig() {
-        return Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES);
+        return Caffeine.newBuilder().expireAfterWrite(CACHE_DURATION, TimeUnit.MINUTES);
     }
 
     @Bean
