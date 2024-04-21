@@ -9,6 +9,7 @@ import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 public class JdbcLinkService implements LinkService {
@@ -25,7 +26,12 @@ public class JdbcLinkService implements LinkService {
     @Override
     public void add(long tgChatId, long linkId, URI url) {
         //long linkId = linkId(url);
-        jdbcLinkDao.add(new LinkDto(linkId, url.toString(), System.currentTimeMillis(), OffsetDateTime.now()));
+        jdbcLinkDao.add(new LinkDto(
+            linkId,
+            url.toString(),
+            System.currentTimeMillis(),
+            OffsetDateTime.now(ZoneId.of("Z"))
+        ));
         jdbcChatToLinkDao.add(new ChatToLinkDto(tgChatId, linkId));
     }
 

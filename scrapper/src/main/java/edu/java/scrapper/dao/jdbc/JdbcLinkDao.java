@@ -37,9 +37,9 @@ public class JdbcLinkDao implements JdbcDao<LinkDto> {
     }
 
     @Transactional
-    public void updateModification(LinkDto linkDto) {
+    public void updateModification(OffsetDateTime lastUpdate, LinkDto linkDto) {
         String sql = "UPDATE link SET last_update=? WHERE link_id=?";
-        jdbcTemplate.update(sql, linkDto.lastUpdate(), linkDto.id());
+        jdbcTemplate.update(sql, lastUpdate, linkDto.id());
     }
 
     @Transactional

@@ -42,21 +42,20 @@ public class JdbcLinkUpdater implements LinkUpdater {
                 jdbcLinkDao.updateCheck(link);
                 if (name.startsWith(GITHUB)) {
                     var response = gitHubClient.getRepository(pathComponents[1], pathComponents[2]);
-                    if (response.getBody()
-                        .pushDate()
-                        .isAfter(link.lastUpdate())) {
-                        jdbcLinkDao.updateModification(link);
+                    var lastUpdate = response.getBody().pushDate();
+                    if (lastUpdate.isAfter(link.lastUpdate())) {
+                        jdbcLinkDao.updateModification(lastUpdate, link);
                         return true;
                     }
                 } else if (name.startsWith(STACK)) {
                     var response
                         = stackOverflowClient.getQuestionById(Integer.parseInt(pathComponents[2]), SITE);
-                    if (response.getBody()
+                    var lastUpdate = response.getBody()
                         .items()
                         .getFirst()
-                        .lastActDate()
-                        .isAfter(link.lastUpdate())) {
-                        jdbcLinkDao.updateModification(link);
+                        .lastActDate();
+                    if (lastUpdate.isAfter(link.lastUpdate())) {
+                        jdbcLinkDao.updateModification(lastUpdate, link);
                         return true;
                     }
                 }
