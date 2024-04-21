@@ -29,7 +29,7 @@ jobs:
       - name: bot image build
         run: |
           docker login --username Bruh3509 --password ${{ secrets.GHCR_PASSWD }} ghcr.io
-          docker build -f bot.Dockerfile . --tag ghcr.io/bot-image-ghcr:latest
+          docker build -f bot.Dockerfile . --tag bot-image-ghcr:latest
           docker push ghcr.io/Bruh3509/bot-image-ghcr:latest
 
       - id: jacoco
