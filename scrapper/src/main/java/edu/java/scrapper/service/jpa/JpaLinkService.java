@@ -6,6 +6,7 @@ import edu.java.scrapper.repository.LinkRepository;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,7 +32,7 @@ public class JpaLinkService implements LinkService {
                 linkId,
                 url.toString(),
                 System.currentTimeMillis(),
-                OffsetDateTime.now()
+                OffsetDateTime.now(ZoneId.of("Z"))
             ));
 
         var chat = chatRepository.findById(tgChatId).orElse(null);
