@@ -29,8 +29,8 @@ jobs:
       - name: bot image build
         run: |
           docker login --username Bruh3509 --password ${{ secrets.GHCR_PASSWD }} ghcr.io
-          docker build -f scrapper.Dockerfile . --tag ghcr.io/scrapper-image
-          docker push ghcr.io/Bruh3509/scrapper-image:latest
+          docker build -f scrapper.Dockerfile . --tag ghcr.io/bruh3509/scrapper-image
+          docker push ghcr.io/bruh3509/scrapper-image:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
