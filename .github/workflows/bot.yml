@@ -39,6 +39,8 @@ jobs:
           context: .
           file: ./bot.Dockerfile
           push: true
+          tags: bot-image
+          labels: latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
