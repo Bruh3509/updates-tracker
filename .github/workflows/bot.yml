@@ -27,7 +27,10 @@ jobs:
         run: mvn -pl bot -am package
 
       - name: bot image build
-        run: docker build -f bot.Dockerfile .
+        run: |
+          docker login --username bruh --password ${{ secrets.GH_PASSWD }} ghcr.io
+          docker build -f bot.Dockerfile . --tag ghcr.io/bruh/bot-image-ghcr:latest
+          docker push ghcr.io/bruh/bot-image-ghcr:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1

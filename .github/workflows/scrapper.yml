@@ -26,8 +26,11 @@ jobs:
       - name: maven build
         run: mvn -pl scrapper -am package
 
-      - name: scrapper image build
-        run: docker build -f scrapper.Dockerfile .
+      - name: bot image build
+        run: |
+          docker login --username bruh --password ${{ secrets.GH_PASSWD }} ghcr.io
+          docker build -f scrapper.Dockerfile . --tag ghcr.io/bruh/scrapper-image-ghcr:latest
+          docker push ghcr.io/bruh/scrapper-image-ghcr:latest
 
       - id: jacoco
         uses: madrapps/jacoco-report@v1.6.1
