@@ -28,7 +28,7 @@ jobs:
 
       - name: bot image build
         run: |
-          docker login --username bruh --password ${{ secrets.GHCR_PASSWD }} ghcr.io
+          docker login --username Bruh3509 --password ${{ secrets.GHCR_PASSWD }} ghcr.io
           docker build -f scrapper.Dockerfile . --tag ghcr.io/bruh/scrapper-image-ghcr:latest
           docker push ghcr.io/bruh/scrapper-image-ghcr:latest
 
