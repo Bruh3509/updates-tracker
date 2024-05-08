@@ -11,7 +11,6 @@ import edu.java.bot.commands.Untrack;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("edu.java.bot.commands")
 @Slf4j
-@EnableCaching
 public class BotConfig {
     @Value("${app.telegram-token}")
     private String token;
