@@ -5,7 +5,7 @@ import edu.java.scrapper.clients.StackOverflowClient;
 import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
 import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.dto.bot.LinkUpdate;
-import edu.java.scrapper.dto.jdbc.ChatToLinkDto;
+import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;

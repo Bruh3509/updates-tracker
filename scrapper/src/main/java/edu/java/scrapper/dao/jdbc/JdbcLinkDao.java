@@ -1,6 +1,6 @@
 package edu.java.scrapper.dao.jdbc;
 
-import edu.java.scrapper.dto.jdbc.LinkDto;
+import edu.java.scrapper.domain.jdbc.LinkDto;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;

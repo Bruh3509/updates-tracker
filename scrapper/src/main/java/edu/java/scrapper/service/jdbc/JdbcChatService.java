@@ -1,7 +1,7 @@
 package edu.java.scrapper.service.jdbc;
 
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
-import edu.java.scrapper.dto.jdbc.ChatDto;
+import edu.java.scrapper.domain.jdbc.ChatDto;
 import edu.java.scrapper.service.interfaces.ChatService;
 
 public class JdbcChatService implements ChatService {
