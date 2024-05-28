@@ -13,6 +13,7 @@ import edu.java.scrapper.service.jooq.JooqLinkService;
 import edu.java.scrapper.service.jooq.JooqLinkUpdater;
 import javax.sql.DataSource;
 import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
 import org.jooq.impl.DataSourceConnectionProvider;
 import org.jooq.impl.DefaultConfiguration;
 import org.jooq.impl.DefaultDSLContext;
@@ -27,6 +28,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -54,18 +57,27 @@ public class JooqConfig {
     }
 
     @Bean
-    public TransactionAwareDataSourceProxy transactionAwareDataSource() {
-        return new TransactionAwareDataSourceProxy(dataSource());
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource());
+        em.setPackagesToScan("edu.java.scrapper.entity");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return em;
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new DataSourceTransactionManager(dataSource());
+    public TransactionAwareDataSourceProxy transactionAwareDataSource(DataSource dataSource) {
+        return new TransactionAwareDataSourceProxy(dataSource);
     }
 
     @Bean
-    public DataSourceConnectionProvider connectionProvider() {
-        return new DataSourceConnectionProvider(transactionAwareDataSource());
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    public DataSourceConnectionProvider connectionProvider(DataSource dataSource) {
+        return new DataSourceConnectionProvider(transactionAwareDataSource(dataSource));
     }
 
     @Bean
@@ -74,17 +86,33 @@ public class JooqConfig {
     }
 
     @Bean
-    public DefaultConfiguration configuration() {
+    public DefaultConfiguration configuration(DataSource dataSource) {
         DefaultConfiguration jooqConfiguration = new DefaultConfiguration();
-        jooqConfiguration.set(connectionProvider());
+        jooqConfiguration.set(connectionProvider(dataSource));
         jooqConfiguration.set(new DefaultExecuteListenerProvider(exceptionTransformer()));
+        jooqConfiguration.setSQLDialect(SQLDialect.POSTGRES);
 
         return jooqConfiguration;
     }
 
     @Bean
-    public DSLContext dslContext() {
-        return new DefaultDSLContext(configuration());
+    public DSLContext dslContext(DataSource dataSource) {
+        return new DefaultDSLContext(configuration(dataSource));
+    }
+
+    @Bean
+    public JooqChatDao jooqChatDao(DSLContext dslContext) {
+        return new JooqChatDao(dslContext);
+    }
+
+    @Bean
+    public JooqChatToLinkDao jooqChatToLinkDao(DSLContext dslContext) {
+        return new JooqChatToLinkDao(dslContext);
+    }
+
+    @Bean
+    public JooqLinkDao jooqLinkDao(DSLContext dslContext) {
+        return new JooqLinkDao(dslContext);
     }
 
     @Bean

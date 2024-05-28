@@ -8,9 +8,7 @@ import java.net.URI;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JooqChatToLinkDao {
     private static final ChatToLink CHAT_TO_LINK = ChatToLink.CHAT_TO_LINK;
     private static final edu.java.scrapper.domain.jooq.tables.Link LINK

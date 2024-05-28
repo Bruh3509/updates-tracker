@@ -3,11 +3,10 @@ package edu.java.scrapper.dao.jooq;
 import edu.java.scrapper.domain.jdbc.ChatDto;
 import edu.java.scrapper.domain.jooq.tables.Chat;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JooqChatDao {
     private static final Chat CHAT = Chat.CHAT;
     private final DSLContext dslContext;
@@ -31,5 +30,15 @@ public class JooqChatDao {
             .deleteFrom(CHAT)
             .where(CHAT.CHAT_ID.eq(chatId))
             .execute();
+    }
+
+    @Transactional
+    public List<ChatDto> findAll() {
+        return dslContext
+            .select()
+            .from(CHAT)
+            .stream()
+            .map(record -> new ChatDto((long) record.get(0), (String) record.get(1)))
+            .toList();
     }
 }

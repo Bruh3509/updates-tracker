@@ -10,9 +10,7 @@ import java.net.URI;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JpaLinkUpdater implements LinkUpdater {
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;

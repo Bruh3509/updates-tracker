@@ -9,10 +9,8 @@ import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
 public class JpaLinkService implements LinkService {
     private final LinkRepository linkRepository;
     private final ChatRepository chatRepository;
