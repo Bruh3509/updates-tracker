@@ -45,14 +45,7 @@ public class JooqLinkDao {
         return dslContext
             .select()
             .from(LINK)
-            .stream()
-            .map(rec -> new LinkDto(
-                (long) rec.get(0),
-                (String) rec.get(1),
-                (long) rec.get(2),
-                (OffsetDateTime) rec.get(3)
-            ))
-            .toList();
+            .fetchInto(LinkDto.class);
     }
 
     @Transactional
@@ -61,14 +54,7 @@ public class JooqLinkDao {
             .select()
             .from(LINK)
             .where(LINK.LINK_ID.eq(id))
-            .stream()
-            .map(rec -> new LinkDto(
-                (long) rec.get(0),
-                (String) rec.get(1),
-                (long) rec.get(2),
-                (OffsetDateTime) rec.get(3)
-            ))
-            .toList();
+            .fetchInto(LinkDto.class);
     }
 
     @Transactional

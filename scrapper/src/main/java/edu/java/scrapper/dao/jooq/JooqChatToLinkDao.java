@@ -4,7 +4,6 @@ import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
 import edu.java.scrapper.domain.jooq.tables.ChatToLink;
 import edu.java.scrapper.dto.scrapper.Link;
 import jakarta.transaction.Transactional;
-import java.net.URI;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,7 @@ public class JooqChatToLinkDao {
             .from(CHAT_TO_LINK.innerJoin(LINK)
                 .on(CHAT_TO_LINK.LINK_ID.eq(LINK.LINK_ID)))
             .where(CHAT_TO_LINK.CHAT_ID.eq(chatId))
-            .stream()
-            .map(rec -> new Link((Long) rec.get(0), URI.create((String) rec.get(1))))
-            .toList();
+            .fetchInto(Link.class);
     }
 
     @Transactional
@@ -56,8 +53,6 @@ public class JooqChatToLinkDao {
             .select(CHAT_TO_LINK.CHAT_ID)
             .from(CHAT_TO_LINK)
             .where(LINK.LINK_ID.eq(linkId))
-            .stream()
-            .map(rec -> (Long) rec.get(0))
-            .toList();
+            .fetchInto(Long.class);
     }
 }

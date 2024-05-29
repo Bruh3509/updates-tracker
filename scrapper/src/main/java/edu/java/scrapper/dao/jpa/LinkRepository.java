@@ -1,4 +1,4 @@
-package edu.java.scrapper.repository;
+package edu.java.scrapper.dao.jpa;
 
 import edu.java.scrapper.entity.Link;
 import java.time.OffsetDateTime;

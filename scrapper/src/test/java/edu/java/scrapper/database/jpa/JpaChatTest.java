@@ -1,7 +1,7 @@
 package edu.java.scrapper.database.jpa;
 
 import edu.java.scrapper.IntegrationTest;
-import edu.java.scrapper.repository.ChatRepository;
+import edu.java.scrapper.dao.jpa.ChatRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

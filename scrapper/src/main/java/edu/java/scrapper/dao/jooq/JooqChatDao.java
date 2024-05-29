@@ -37,8 +37,6 @@ public class JooqChatDao {
         return dslContext
             .select()
             .from(CHAT)
-            .stream()
-            .map(record -> new ChatDto((long) record.get(0), (String) record.get(1)))
-            .toList();
+            .fetchInto(ChatDto.class);
     }
 }

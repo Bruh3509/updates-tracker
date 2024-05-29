@@ -4,7 +4,7 @@ import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.entity.Chat;
-import edu.java.scrapper.repository.LinkRepository;
+import edu.java.scrapper.dao.jpa.LinkRepository;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;

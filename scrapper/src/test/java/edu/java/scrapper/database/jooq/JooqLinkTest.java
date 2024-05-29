@@ -2,8 +2,11 @@ package edu.java.scrapper.database.jooq;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.dao.jooq.JooqChatDao;
+import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.service.interfaces.ChatService;
+import edu.java.scrapper.service.interfaces.LinkService;
 import jakarta.transaction.Transactional;
+import java.net.URI;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +15,17 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled
 @SpringBootTest
-public class JooqChatTest extends IntegrationTest {
+public class JooqLinkTest extends IntegrationTest {
     @DynamicPropertySource
     static void setJooqAccessType(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jooq");
     }
 
+    @Autowired
+    private LinkService linkService;
     @Autowired
     private ChatService chatService;
     @Autowired
@@ -30,30 +34,26 @@ public class JooqChatTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    void testChatRemove() {
+    void testLinkAddRemove() {
+        var link = "https://foreach.com";
         chatService.register(42, "default");
-        var allChats = chatDao.findAll();
-        assertThat(allChats.size()).isEqualTo(1);
-        assertThat(allChats.getFirst().id()).isEqualTo(42);
-        assertThat(allChats.getFirst().name()).isEqualTo("default");
+        linkService.add(42, link.hashCode(), URI.create(link));
+        assertThat(linkService.listAll(42))
+            .containsExactly(new Link((long) link.hashCode(), URI.create(link)));
 
-        chatService.unregister(42);
-        var allChats1 = chatDao.findAll();
-        assertTrue(allChats1.isEmpty());
+        linkService.remove(42, link.hashCode());
+        assertThat(linkService.listAll(42)).isEmpty();
     }
 
     @Test
     @Transactional
     @Rollback
-    void testNoChatRemove() {
-        chatService.register(42, "default");
-        var allChats = chatDao.findAll();
-        assertThat(allChats.size()).isEqualTo(1);
-        assertThat(allChats.getFirst().id()).isEqualTo(42);
-        assertThat(allChats.getFirst().name()).isEqualTo("default");
-
-        chatService.unregister(41);
-        var allChats1 = chatDao.findAll();
-        assertThat(allChats1).containsExactlyInAnyOrderElementsOf(allChats);
+    void testNoChatLinkRemove() {
+        var link = "https://foreach.com";
+        chatService.register(41, "default");
+        linkService.add(41, link.hashCode(), URI.create(link));
+        linkService.remove(42, link.hashCode());
+        assertThat(linkService.listAll(41))
+            .containsExactly(new Link((long) link.hashCode(), URI.create(link)));
     }
 }

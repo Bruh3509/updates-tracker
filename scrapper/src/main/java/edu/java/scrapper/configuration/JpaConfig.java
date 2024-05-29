@@ -2,8 +2,8 @@ package edu.java.scrapper.configuration;
 
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
-import edu.java.scrapper.repository.ChatRepository;
-import edu.java.scrapper.repository.LinkRepository;
+import edu.java.scrapper.dao.jpa.ChatRepository;
+import edu.java.scrapper.dao.jpa.LinkRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
