@@ -23,7 +23,7 @@ public record ApplicationConfig(
     }
 
     public enum AccessType {
-        JDBC, JPA
+        JDBC, JPA, JOOQ
     }
 
     public record Retry(@NotNull int maxAttempts, @NotNull long delay, @NotNull long exponential) {

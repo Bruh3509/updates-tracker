@@ -1,27 +1,21 @@
 package edu.java.scrapper.database.jpa;
 
 import edu.java.scrapper.IntegrationTest;
+import edu.java.scrapper.dao.jpa.ChatRepository;
 import edu.java.scrapper.dto.scrapper.Link;
-import edu.java.scrapper.entity.Chat;
-import edu.java.scrapper.repository.ChatRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
-import edu.java.scrapper.service.jpa.JpaLinkService;
-import org.junit.jupiter.api.Disabled;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.net.URI;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
 @SpringBootTest
 public class JpaLinkTest extends IntegrationTest {
     @DynamicPropertySource
@@ -37,6 +31,7 @@ public class JpaLinkTest extends IntegrationTest {
     private ChatRepository chatRepository;
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testLinkAddRemove() {
@@ -52,6 +47,7 @@ public class JpaLinkTest extends IntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testNoChatLinkRemove() {
@@ -66,6 +62,7 @@ public class JpaLinkTest extends IntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testNoLinkRemove() {
@@ -79,5 +76,4 @@ public class JpaLinkTest extends IntegrationTest {
             URI.create(git)
         ));
     }
-
 }

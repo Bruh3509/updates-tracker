@@ -1,13 +1,11 @@
 package edu.java.scrapper.service.jpa;
 
+import edu.java.scrapper.dao.jpa.ChatRepository;
 import edu.java.scrapper.entity.Chat;
-import edu.java.scrapper.repository.ChatRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
 public class JpaChatService implements ChatService {
     private final ChatRepository chatRepository;
 

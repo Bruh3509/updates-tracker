@@ -1,18 +1,16 @@
 package edu.java.scrapper.service.jpa;
 
+import edu.java.scrapper.dao.jpa.ChatRepository;
+import edu.java.scrapper.dao.jpa.LinkRepository;
 import edu.java.scrapper.dto.scrapper.Link;
-import edu.java.scrapper.repository.ChatRepository;
-import edu.java.scrapper.repository.LinkRepository;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
 public class JpaLinkService implements LinkService {
     private final LinkRepository linkRepository;
     private final ChatRepository chatRepository;

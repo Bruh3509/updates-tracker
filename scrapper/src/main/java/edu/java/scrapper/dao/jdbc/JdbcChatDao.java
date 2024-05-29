@@ -1,13 +1,11 @@
 package edu.java.scrapper.dao.jdbc;
 
-import edu.java.scrapper.dto.jdbc.ChatDto;
+import edu.java.scrapper.domain.jdbc.ChatDto;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
 @Transactional
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcChatDao implements JdbcDao<ChatDto> {

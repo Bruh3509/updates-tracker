@@ -1,4 +1,4 @@
-package edu.java.scrapper.dto.jdbc;
+package edu.java.scrapper.domain.jdbc;
 
 import java.time.OffsetDateTime;
 

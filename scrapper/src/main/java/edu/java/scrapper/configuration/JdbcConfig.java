@@ -57,6 +57,21 @@ public class JdbcConfig {
     }
 
     @Bean
+    public JdbcLinkDao jdbcLinkDao(JdbcTemplate jdbcTemplate) {
+        return new JdbcLinkDao(jdbcTemplate);
+    }
+
+    @Bean
+    public JdbcChatDao jdbcChatDao(JdbcTemplate jdbcTemplate) {
+        return new JdbcChatDao(jdbcTemplate);
+    }
+
+    @Bean
+    public JdbcChatToLinkDao jdbcChatToLinkDao(JdbcTemplate jdbcTemplate) {
+        return new JdbcChatToLinkDao(jdbcTemplate);
+    }
+
+    @Bean
     public LinkService linkService(
         JdbcLinkDao jdbcLinkDao,
         JdbcChatDao jdbcChatDao,

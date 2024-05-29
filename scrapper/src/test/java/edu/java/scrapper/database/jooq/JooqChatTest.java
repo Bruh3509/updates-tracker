@@ -1,8 +1,9 @@
-package edu.java.scrapper.database.jpa;
+package edu.java.scrapper.database.jooq;
 
 import edu.java.scrapper.IntegrationTest;
-import edu.java.scrapper.dao.jpa.ChatRepository;
+import edu.java.scrapper.dao.jooq.JooqChatDao;
 import edu.java.scrapper.service.interfaces.ChatService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,21 +11,20 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JpaChatTest extends IntegrationTest {
+public class JooqChatTest extends IntegrationTest {
     @DynamicPropertySource
-    static void setJpaAccessType(DynamicPropertyRegistry registry) {
-        registry.add("app.database-access-type", () -> "jpa");
+    static void setJooqAccessType(DynamicPropertyRegistry registry) {
+        registry.add("app.database-access-type", () -> "jooq");
     }
 
     @Autowired
     private ChatService chatService;
     @Autowired
-    private ChatRepository chatRepository;
+    private JooqChatDao chatDao;
 
     @Test
     @DirtiesContext
@@ -32,13 +32,13 @@ public class JpaChatTest extends IntegrationTest {
     @Rollback
     void testChatRemove() {
         chatService.register(42, "default");
-        var allChats = chatRepository.findAll();
+        var allChats = chatDao.findAll();
         assertThat(allChats.size()).isEqualTo(1);
-        assertThat(allChats.getFirst().getChatId()).isEqualTo(42);
-        assertThat(allChats.getFirst().getName()).isEqualTo("default");
+        assertThat(allChats.getFirst().id()).isEqualTo(42);
+        assertThat(allChats.getFirst().name()).isEqualTo("default");
 
         chatService.unregister(42);
-        var allChats1 = chatRepository.findAll();
+        var allChats1 = chatDao.findAll();
         assertTrue(allChats1.isEmpty());
     }
 
@@ -48,14 +48,13 @@ public class JpaChatTest extends IntegrationTest {
     @Rollback
     void testNoChatRemove() {
         chatService.register(42, "default");
-        var allChats = chatRepository.findAll();
+        var allChats = chatDao.findAll();
         assertThat(allChats.size()).isEqualTo(1);
-        assertThat(allChats.getFirst().getChatId()).isEqualTo(42);
-        assertThat(allChats.getFirst().getName()).isEqualTo("default");
+        assertThat(allChats.getFirst().id()).isEqualTo(42);
+        assertThat(allChats.getFirst().name()).isEqualTo("default");
 
         chatService.unregister(41);
-        var allChats1 = chatRepository.findAll();
-        assertThat(allChats1.getFirst().getChatId()).isEqualTo(42);
-        assertThat(allChats1.getFirst().getName()).isEqualTo("default");
+        var allChats1 = chatDao.findAll();
+        assertThat(allChats1).containsExactlyInAnyOrderElementsOf(allChats);
     }
 }

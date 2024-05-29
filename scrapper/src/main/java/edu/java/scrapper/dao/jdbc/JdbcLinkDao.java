@@ -1,16 +1,14 @@
 package edu.java.scrapper.dao.jdbc;
 
-import edu.java.scrapper.dto.jdbc.LinkDto;
+import edu.java.scrapper.domain.jdbc.LinkDto;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
 @Transactional
 @SuppressWarnings({"MultipleStringLiterals"})
 public class JdbcLinkDao implements JdbcDao<LinkDto> {
