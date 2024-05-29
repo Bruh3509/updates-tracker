@@ -1,8 +1,8 @@
 package edu.java.scrapper.service.jpa;
 
-import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.dao.jpa.ChatRepository;
 import edu.java.scrapper.dao.jpa.LinkRepository;
+import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;

@@ -3,10 +3,10 @@ package edu.java.scrapper.database.jpa;
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.dao.jpa.ChatRepository;
 import edu.java.scrapper.service.interfaces.ChatService;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
 @SpringBootTest
 public class JpaChatTest extends IntegrationTest {
     @DynamicPropertySource
@@ -28,6 +27,7 @@ public class JpaChatTest extends IntegrationTest {
     private ChatRepository chatRepository;
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testChatRemove() {
@@ -43,6 +43,7 @@ public class JpaChatTest extends IntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testNoChatRemove() {

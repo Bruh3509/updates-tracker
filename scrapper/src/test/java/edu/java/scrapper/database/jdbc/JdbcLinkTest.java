@@ -1,27 +1,21 @@
 package edu.java.scrapper.database.jdbc;
 
 import edu.java.scrapper.IntegrationTest;
-
-import java.net.URI;
-
 import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
+import java.net.URI;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Disabled
 @SpringBootTest
 class JdbcLinkTest extends IntegrationTest {
     @DynamicPropertySource
@@ -37,6 +31,7 @@ class JdbcLinkTest extends IntegrationTest {
     private JdbcChatDao chatDao;
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testLinkAddRemove() {
@@ -52,6 +47,7 @@ class JdbcLinkTest extends IntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testNoChatLinkRemove() {
@@ -66,6 +62,7 @@ class JdbcLinkTest extends IntegrationTest {
     }
 
     @Test
+    @DirtiesContext
     @Transactional
     @Rollback
     void testNoLinkRemove() {
