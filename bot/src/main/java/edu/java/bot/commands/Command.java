@@ -13,6 +13,8 @@ public interface Command {
         UNKNOWN
     }
 
+    String TOO_MANY_REQUESTS = "Too many requests! Wait a bit, please.";
+
     String command();
 
     String description();

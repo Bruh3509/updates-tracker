@@ -4,12 +4,18 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.dto.scrapper.GetResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @Component
 public class List implements Command {
     private static final String NO_LINKS = "You're not following anything!\n";
+    private static final Logger log = LoggerFactory.getLogger(List.class);
     private final ScrapperClient scrapperClient;
 
     @Autowired
@@ -18,7 +24,14 @@ public class List implements Command {
     }
 
     private String getLinks(Long id) {
-        var response = scrapperClient.getAllLinks(id);
+        ResponseEntity<GetResponse> response;
+        try {
+            response = scrapperClient.getAllLinks(id);
+        } catch (HttpStatusCodeException e) {
+            log.info(e.getMessage());
+            return TOO_MANY_REQUESTS;
+        }
+
         var links = response.getBody().links();
         if (!links.isEmpty()) {
             StringBuilder result = new StringBuilder();
