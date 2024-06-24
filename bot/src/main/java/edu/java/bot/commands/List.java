@@ -28,7 +28,6 @@ public class List implements Command {
         try {
             response = scrapperClient.getAllLinks(id);
         } catch (HttpStatusCodeException e) {
-            log.info(e.getMessage());
             return TOO_MANY_REQUESTS;
         }
 
