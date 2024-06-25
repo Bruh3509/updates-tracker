@@ -9,7 +9,6 @@ import edu.java.scrapper.service.interfaces.LinkService;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
-import jakarta.servlet.http.HttpServletRequest;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +39,6 @@ public class ScrapperController {
     private final CaffeineCacheManager cacheManager;
 
     @Autowired
-    private HttpServletRequest context;
-
-    @Autowired
     public ScrapperController(
         ChatService chatService,
         LinkService linkService,
@@ -55,8 +51,7 @@ public class ScrapperController {
 
     @PostMapping(value = "/tg-chat/{id}")
     public ResponseEntity<Void> regChat(@PathVariable Long id) {
-        String ip = context.getRemoteAddr();
-        Bucket bucket = getBucket(ip);
+        Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
             chatService.register(id, "default"); // stub for user name
@@ -67,8 +62,7 @@ public class ScrapperController {
 
     @DeleteMapping(value = "/tg-chat/{id}")
     public ResponseEntity<Void> deleteChat(@PathVariable Long id) {
-        String ip = context.getRemoteAddr();
-        Bucket bucket = getBucket(ip);
+        Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
             chatService.unregister(id);
@@ -82,8 +76,7 @@ public class ScrapperController {
     public ResponseEntity<ScrapperGetResponse> getAllLinks(
         @RequestHeader(name = "Tg-Chat-Id") Long id
     ) {
-        String ip = context.getRemoteAddr();
-        Bucket bucket = getBucket(ip);
+        Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
             var links = linkService.listAll(id);
@@ -101,8 +94,7 @@ public class ScrapperController {
         @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody ScrapperPostRequest request
     ) {
-        String ip = context.getRemoteAddr();
-        Bucket bucket = getBucket(ip);
+        Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
             log.info("Adding link");
@@ -122,8 +114,7 @@ public class ScrapperController {
         @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody ScrapperPostRequest link
     ) {
-        String ip = context.getRemoteAddr();
-        Bucket bucket = getBucket(ip);
+        Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
             linkService.remove(id, link.link().url().toString().hashCode());
