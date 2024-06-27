@@ -6,6 +6,7 @@ import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.clients.ScrapperClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @Component
 public class Start implements Command {
@@ -28,7 +29,11 @@ public class Start implements Command {
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        scrapperClient.regChat(update.chatId());
+        try {
+            scrapperClient.regChat(update.chatId());
+        } catch (HttpStatusCodeException e) {
+            return new SendMessage(update.chatId(), TOO_MANY_REQUESTS);
+        }
         return new SendMessage(update.chatId(), String.format(
             "Hello, %s!",
             update.userFName()

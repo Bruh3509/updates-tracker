@@ -19,7 +19,7 @@ public class JdbcChatDao implements JdbcDao<ChatDto> {
     @Override
     @Transactional
     public void add(ChatDto chatDto) {
-        String sql = "INSERT INTO chat(chat_id, user_name) VALUES(?,?)";
+        String sql = "INSERT INTO chat(chat_id, user_name) VALUES(?,?) ON CONFLICT DO NOTHING";
         jdbcTemplate.update(sql, chatDto.id(), chatDto.name());
     }
 

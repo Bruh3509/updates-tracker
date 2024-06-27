@@ -10,7 +10,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @EnableConfigurationProperties(ApplicationConfig.class)
 @EnableRetry
 public class BotApplication {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(BotApplication.class, args);
     }
 }

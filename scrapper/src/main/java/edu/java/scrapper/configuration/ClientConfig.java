@@ -4,13 +4,8 @@ import edu.java.scrapper.clients.BotClient;
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
 import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -99,19 +94,15 @@ public class ClientConfig {
     @Bean
     FilterRegistrationBean<Filter> xForwardedForFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new Filter() {
-            @Override
-            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-                throws IOException, ServletException {
-                if (request instanceof HttpServletRequest httpServletRequest) {
-                    String xForwardedForHeader = httpServletRequest.getHeader(HEADER);
-                    if (xForwardedForHeader == null || xForwardedForHeader.isEmpty()) {
-                        String clientIpAddress = httpServletRequest.getRemoteAddr();
-                        ((HttpServletResponse) response).addHeader(HEADER, clientIpAddress);
-                    }
+        registrationBean.setFilter((request, response, chain) -> {
+            if (request instanceof HttpServletRequest httpServletRequest) {
+                String xForwardedForHeader = httpServletRequest.getHeader(HEADER);
+                if (xForwardedForHeader == null || xForwardedForHeader.isEmpty()) {
+                    String clientIpAddress = httpServletRequest.getRemoteAddr();
+                    ((HttpServletResponse) response).addHeader(HEADER, clientIpAddress);
                 }
-                chain.doFilter(request, response);
             }
+            chain.doFilter(request, response);
         });
 
         registrationBean.addUrlPatterns("/*");

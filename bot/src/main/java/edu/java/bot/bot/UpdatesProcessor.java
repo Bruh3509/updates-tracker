@@ -1,7 +1,5 @@
 package edu.java.bot.bot;
 
-// TODO DI of commands and track, untrack logic (maybe make additioanl class to just print in first call).
-
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import edu.java.bot.apiwrapper.UpdateWrapper;
@@ -87,12 +85,8 @@ public class UpdatesProcessor {
 
     private static Command identifyCommand(UpdateWrapper update) {
         return switch (update.messageText()) {
-            case "/start" -> {
-                yield start;
-            }
-            case "/help" -> {
-                yield help;
-            }
+            case "/start" -> start;
+            case "/help" -> help;
             case "/track" -> {
                 var cur = usersState.get(update.chatId());
                 cur.prevCommandObj = track;
@@ -105,9 +99,7 @@ public class UpdatesProcessor {
                 cur.isTrackOrUntrack = true;
                 yield untrackInfo;
             }
-            case "/list" -> {
-                yield list;
-            }
+            case "/list" -> list;
             default -> unknown;
         };
     }
@@ -124,5 +116,4 @@ public class UpdatesProcessor {
             this.prevCommandObj = prevCommandObj;
         }
     }
-
 }

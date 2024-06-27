@@ -7,8 +7,10 @@ import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.dto.scrapper.Link;
 import edu.java.bot.dto.scrapper.PostRequest;
 import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 
 @Component
 public class Untrack implements Command {
@@ -37,7 +39,12 @@ public class Untrack implements Command {
 
     @Override
     public SendMessage handle(UpdateWrapper update) {
-        var links = scrapperClient.getAllLinks(update.chatId()).getBody().links();
+        List<Link> links;
+        try {
+            links = scrapperClient.getAllLinks(update.chatId()).getBody().links();
+        } catch (HttpStatusCodeException e) {
+            return new SendMessage(update.chatId(), TOO_MANY_REQUESTS);
+        }
         var userInput = update.messageText();
         boolean isPresent = false;
         for (var link : links) {
