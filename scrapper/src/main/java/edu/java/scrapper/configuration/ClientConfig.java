@@ -3,10 +3,6 @@ package edu.java.scrapper.configuration;
 import edu.java.scrapper.clients.BotClient;
 import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
-import jakarta.servlet.Filter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
@@ -89,23 +85,5 @@ public class ClientConfig {
             = HttpServiceProxyFactory.builderFor(RestClientAdapter.create(client)).build();
 
         return factory.createClient(BotClient.class);
-    }
-
-    @Bean
-    FilterRegistrationBean<Filter> xForwardedForFilter() {
-        FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter((request, response, chain) -> {
-            if (request instanceof HttpServletRequest httpServletRequest) {
-                String xForwardedForHeader = httpServletRequest.getHeader(HEADER);
-                if (xForwardedForHeader == null || xForwardedForHeader.isEmpty()) {
-                    String clientIpAddress = httpServletRequest.getRemoteAddr();
-                    ((HttpServletResponse) response).addHeader(HEADER, clientIpAddress);
-                }
-            }
-            chain.doFilter(request, response);
-        });
-
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
     }
 }
