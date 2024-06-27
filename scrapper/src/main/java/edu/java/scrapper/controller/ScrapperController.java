@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScrapperController {
 
     private static final String CACHE_NAME = "buckets";
-    private static final Long TOKENS_1 = 10L;
-    private static final Long TOKENS_2 = 5L;
+    private static final Long TOKENS_1 = 20L;
+    private static final Long TOKENS_2 = 10L;
     private static final Long DURATION = 20L;
 
     private final ChatService chatService;

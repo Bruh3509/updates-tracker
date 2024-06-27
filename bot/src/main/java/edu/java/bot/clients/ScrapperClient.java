@@ -23,14 +23,14 @@ public interface ScrapperClient {
                retryFor = {HttpServerErrorException.InternalServerError.class},
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
-    ResponseEntity<Void> regChat(@PathVariable(required = true) Long id);
+    ResponseEntity<Void> regChat(@PathVariable() Long id);
 
     @DeleteExchange("/tg-chat/{id}")
     @Retryable(maxAttemptsExpression = "${app.retry.max-attempts}",
                retryFor = {HttpServerErrorException.InternalServerError.class},
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
-    ResponseEntity<Void> deleteChat(@PathVariable(required = true) Long id);
+    ResponseEntity<Void> deleteChat(@PathVariable() Long id);
 
     @GetExchange(value = "/links", accept = "application/json")
     @Retryable(maxAttemptsExpression = "${app.retry.max-attempts}",
@@ -38,7 +38,7 @@ public interface ScrapperClient {
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
     ResponseEntity<GetResponse> getAllLinks(
-        @RequestHeader(name = "Tg-Chat-Id", required = true) Long id
+        @RequestHeader(name = "Tg-Chat-Id") Long id
     );
 
     @PostExchange(value = "/links", contentType = "application/json", accept = "application/json")
@@ -47,7 +47,7 @@ public interface ScrapperClient {
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
     ResponseEntity<PostResponse> addLink(
-        @RequestHeader(name = "Tg-Chat-Id", required = true) Long id,
+        @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody PostRequest link
     );
 
@@ -57,7 +57,7 @@ public interface ScrapperClient {
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
     ResponseEntity<DeleteResponse> deleteLink(
-        @RequestHeader(name = "Tg-Chat-Id", required = true) Long id,
+        @RequestHeader(name = "Tg-Chat-Id") Long id,
         @RequestBody PostRequest link
     );
 }
