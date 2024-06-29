@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackInfo implements Command {
-    private static final String UNTRACK_RESPONSE = "Enter `link` to stop follow!";
+    private static final String UNTRACK_RESPONSE = "Enter `link` to stop follow";
 
     @Override
     public String command() {

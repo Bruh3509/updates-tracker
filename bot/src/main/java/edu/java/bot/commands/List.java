@@ -12,7 +12,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 @Component
 public class List implements Command {
-    private static final String NO_LINKS = "You're not following anything!\n";
+    private static final String NO_LINKS = "You're not following anything\n";
     private final ScrapperClient scrapperClient;
 
     @Autowired
