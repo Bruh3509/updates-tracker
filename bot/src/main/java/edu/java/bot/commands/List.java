@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class List implements Command {
@@ -31,7 +32,8 @@ public class List implements Command {
         var links = response.getBody().links();
         if (!links.isEmpty()) {
             StringBuilder result = new StringBuilder();
-            links.forEach(link -> result.append("`%s`\n".formatted(link.url().toString())));
+            AtomicInteger counter = new AtomicInteger(1);
+            links.forEach(link -> result.append("%d. `%s`\n".formatted(counter.getAndIncrement(),link.url().toString())));
 
             return result.toString();
         }
