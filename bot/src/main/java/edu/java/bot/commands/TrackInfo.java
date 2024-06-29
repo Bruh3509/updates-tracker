@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TrackInfo implements Command {
-    private static final String TRACK_RESPONSE = "Enter `link` to follow!";
+    private static final String TRACK_RESPONSE = "Enter `link` to follow";
 
     @Override
     public String command() {

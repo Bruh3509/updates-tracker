@@ -15,10 +15,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 @Component
 public class Untrack implements Command {
     private static final String UNTRACK_SUCCESS = """
-        Successfully untracked!
+        Successfully untracked
         """;
     private static final String UNTRACK_NO_PRESENT = """
-        No following this link!
+        No following this link
         """;
     private final ScrapperClient scrapperClient;
 
