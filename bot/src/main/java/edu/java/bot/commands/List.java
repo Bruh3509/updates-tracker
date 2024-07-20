@@ -5,11 +5,11 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.apiwrapper.UpdateWrapper;
 import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.dto.scrapper.GetResponse;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class List implements Command {
@@ -33,7 +33,8 @@ public class List implements Command {
         if (!links.isEmpty()) {
             StringBuilder result = new StringBuilder();
             AtomicInteger counter = new AtomicInteger(1);
-            links.forEach(link -> result.append("%d. `%s`\n".formatted(counter.getAndIncrement(),link.url().toString())));
+            links.forEach(link ->
+                result.append("%d. `%s`\n".formatted(counter.getAndIncrement(),link.url().toString())));
 
             return result.toString();
         }
