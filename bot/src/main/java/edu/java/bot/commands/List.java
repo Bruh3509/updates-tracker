@@ -34,7 +34,7 @@ public class List implements Command {
             StringBuilder result = new StringBuilder();
             AtomicInteger counter = new AtomicInteger(1);
             links.forEach(link ->
-                result.append("%d. `%s`\n".formatted(counter.getAndIncrement(),link.url().toString())));
+                result.append("%d. `%s`\n".formatted(counter.getAndIncrement(), link.url().toString())));
 
             return result.toString();
         }
