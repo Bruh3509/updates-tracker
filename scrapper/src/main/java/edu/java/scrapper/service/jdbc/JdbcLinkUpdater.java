@@ -9,7 +9,6 @@ import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class JdbcLinkUpdater implements LinkUpdater {
 
@@ -19,8 +18,8 @@ public class JdbcLinkUpdater implements LinkUpdater {
     private final JdbcChatToLinkDao jdbcChatToLinkDao;
 
     public JdbcLinkUpdater(
-        @Qualifier("github") GitHubClient gitHubClient,
-        @Qualifier("stackoverflow") StackOverflowClient stackOverflowClient,
+        GitHubClient gitHubClient,
+        StackOverflowClient stackOverflowClient,
         JdbcLinkDao jdbcLinkDao,
         JdbcChatToLinkDao jdbcChatToLinkDao
     ) {

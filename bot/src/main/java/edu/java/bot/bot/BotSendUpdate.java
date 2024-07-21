@@ -19,11 +19,9 @@ public class BotSendUpdate {
     public void sendUpdate(SendUpdateDto update) {
         update
             .chatId()
-            .forEach(chatId -> {
-                bot.execute(new SendMessage(
-                    chatId,
-                    String.format("New update: `%s`!", update.name())
-                ).parseMode(ParseMode.Markdown));
-            });
+            .forEach(chatId -> bot.execute(new SendMessage(
+                chatId,
+                String.format("New update: `%s`!", update.name())
+            ).parseMode(ParseMode.Markdown)));
     }
 }

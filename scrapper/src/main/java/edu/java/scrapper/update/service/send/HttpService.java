@@ -1,11 +1,11 @@
-package edu.java.scrapper.kafka.service.send;
+package edu.java.scrapper.update.service.send;
 
 import edu.java.scrapper.clients.BotClient;
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.dto.bot.PostRequest;
-import edu.java.scrapper.kafka.service.interfaces.SendUpdatesService;
+import edu.java.scrapper.update.service.interfaces.SendUpdatesService;
 import java.util.List;
-import static edu.java.scrapper.shedule.LinkUpdaterScheduler.NEW_UPDATE;
+import static edu.java.scrapper.update.shedule.LinkUpdaterScheduler.NEW_UPDATE;
 
 public class HttpService implements SendUpdatesService {
     private final BotClient botClient;

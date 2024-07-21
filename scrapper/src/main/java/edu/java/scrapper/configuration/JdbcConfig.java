@@ -74,10 +74,9 @@ public class JdbcConfig {
     @Bean
     public LinkService linkService(
         JdbcLinkDao jdbcLinkDao,
-        JdbcChatDao jdbcChatDao,
         JdbcChatToLinkDao jdbcChatToLinkDao
     ) {
-        return new JdbcLinkService(jdbcChatToLinkDao, jdbcLinkDao, jdbcChatDao);
+        return new JdbcLinkService(jdbcChatToLinkDao, jdbcLinkDao);
     }
 
     @Bean

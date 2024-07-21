@@ -1,6 +1,5 @@
 package edu.java.scrapper.service.jdbc;
 
-import edu.java.scrapper.dao.jdbc.JdbcChatDao;
 import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
 import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
@@ -15,17 +14,17 @@ import java.util.List;
 public class JdbcLinkService implements LinkService {
     private final JdbcChatToLinkDao jdbcChatToLinkDao;
     private final JdbcLinkDao jdbcLinkDao;
-    private final JdbcChatDao jdbcChatDao;
 
-    public JdbcLinkService(JdbcChatToLinkDao jdbcChatToLinkDao, JdbcLinkDao jdbcLinkDao, JdbcChatDao jdbcChatDao) {
+    public JdbcLinkService(
+        JdbcChatToLinkDao jdbcChatToLinkDao,
+        JdbcLinkDao jdbcLinkDao
+    ) {
         this.jdbcChatToLinkDao = jdbcChatToLinkDao;
         this.jdbcLinkDao = jdbcLinkDao;
-        this.jdbcChatDao = jdbcChatDao;
     }
 
     @Override
     public void add(long tgChatId, long linkId, URI url) {
-        //long linkId = linkId(url);
         jdbcLinkDao.add(new LinkDto(
             linkId,
             url.toString(),
