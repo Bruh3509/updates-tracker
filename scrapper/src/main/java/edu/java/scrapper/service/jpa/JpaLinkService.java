@@ -15,7 +15,6 @@ public class JpaLinkService implements LinkService {
     private final LinkRepository linkRepository;
     private final ChatRepository chatRepository;
 
-    @Autowired
     public JpaLinkService(LinkRepository linkRepository, ChatRepository chatRepository) {
         this.linkRepository = linkRepository;
         this.chatRepository = chatRepository;

@@ -16,7 +16,7 @@ public class JooqLinkService implements LinkService {
     private final JooqLinkDao linkDao;
     private final JooqChatToLinkDao chatToLinkDao;
 
-    @Autowired
+
     public JooqLinkService(JooqLinkDao linkDao, JooqChatToLinkDao chatToLinkDao) {
         this.linkDao = linkDao;
         this.chatToLinkDao = chatToLinkDao;

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class JpaChatService implements ChatService {
     private final ChatRepository chatRepository;
 
-    @Autowired
+
     public JpaChatService(ChatRepository chatRepository) {
         this.chatRepository = chatRepository;
     }

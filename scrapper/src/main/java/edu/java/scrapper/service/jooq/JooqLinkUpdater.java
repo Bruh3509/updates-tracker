@@ -16,7 +16,7 @@ public class JooqLinkUpdater implements LinkUpdater {
     private final JooqLinkDao linkDao;
     private final JooqChatToLinkDao chatToLinkDao;
 
-    @Autowired
+
     public JooqLinkUpdater(
         GitHubClient gitHubClient,
         StackOverflowClient stackOverflowClient,

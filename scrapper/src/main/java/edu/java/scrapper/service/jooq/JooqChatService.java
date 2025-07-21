@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class JooqChatService implements ChatService {
     private final JooqChatDao jooqChatDao;
 
-    @Autowired
+
     public JooqChatService(JooqChatDao jooqChatDao) {
         this.jooqChatDao = jooqChatDao;
     }

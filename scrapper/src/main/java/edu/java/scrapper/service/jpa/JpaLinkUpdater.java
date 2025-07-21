@@ -15,7 +15,7 @@ public class JpaLinkUpdater implements LinkUpdater {
     private final StackOverflowClient stackOverflowClient;
     private final LinkRepository linkRepository;
 
-    @Autowired
+
     public JpaLinkUpdater(
         GitHubClient gitHubClient,
         StackOverflowClient stackOverflowClient,
