@@ -1,13 +1,11 @@
 package edu.java.scrapper.dao.hibernate;
 
-import edu.java.scrapper.domain.jdbc.LinkDto;
 import edu.java.scrapper.entity.Link;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import java.time.OffsetDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor

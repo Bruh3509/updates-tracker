@@ -24,8 +24,7 @@ public class JpaLinkService implements LinkService {
     @Transactional
     public void add(long tgChatId, long linkId, URI url) {
         var l = linkRepository.findById(linkId);
-        var newLink = l
-            .orElseGet(() -> new edu.java.scrapper.entity.Link(
+        var newLink = l.orElseGet(() -> new edu.java.scrapper.entity.Link(
                 linkId,
                 url.toString(),
                 System.currentTimeMillis(),
@@ -57,6 +56,7 @@ public class JpaLinkService implements LinkService {
         });
     }
 
+    // TODO fix N+1
     @Override
     @Transactional
     public List<Link> listAll(long tgChatId) {
