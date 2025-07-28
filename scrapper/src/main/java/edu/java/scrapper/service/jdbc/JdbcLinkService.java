@@ -6,22 +6,21 @@ import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
 import edu.java.scrapper.domain.jdbc.LinkDto;
 import edu.java.scrapper.dto.scrapper.Link;
 import edu.java.scrapper.service.interfaces.LinkService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Transactional
 public class JdbcLinkService implements LinkService {
-    private final JdbcChatToLinkDao jdbcChatToLinkDao;
-    private final JdbcLinkDao jdbcLinkDao;
-
-    public JdbcLinkService(
-        JdbcChatToLinkDao jdbcChatToLinkDao,
-        JdbcLinkDao jdbcLinkDao
-    ) {
-        this.jdbcChatToLinkDao = jdbcChatToLinkDao;
-        this.jdbcLinkDao = jdbcLinkDao;
-    }
+    JdbcChatToLinkDao jdbcChatToLinkDao;
+    JdbcLinkDao jdbcLinkDao;
 
     @Override
     public void add(long tgChatId, long linkId, URI url) {

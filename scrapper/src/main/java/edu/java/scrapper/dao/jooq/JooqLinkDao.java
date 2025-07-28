@@ -5,20 +5,18 @@ import edu.java.scrapper.domain.jooq.tables.Link;
 import jakarta.transaction.Transactional;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings({"MagicNumber"})
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class JooqLinkDao {
-    private static final Link LINK = Link.LINK;
-    private final DSLContext dslContext;
+    static Link LINK = Link.LINK;
+    DSLContext dslContext;
 
-    @Autowired
-    public JooqLinkDao(DSLContext dslContext) {
-        this.dslContext = dslContext;
-    }
-
-    @Transactional
     public void add(LinkDto linkDto) {
         dslContext
             .insertInto(LINK)
@@ -32,7 +30,6 @@ public class JooqLinkDao {
             .execute();
     }
 
-    @Transactional
     public void remove(long id) {
         dslContext
             .deleteFrom(LINK)
@@ -40,7 +37,6 @@ public class JooqLinkDao {
             .execute();
     }
 
-    @Transactional
     public List<LinkDto> findAll() {
         return dslContext
             .select()
@@ -48,7 +44,6 @@ public class JooqLinkDao {
             .fetchInto(LinkDto.class);
     }
 
-    @Transactional
     public List<LinkDto> findAll(long id) {
         return dslContext
             .select()
@@ -57,7 +52,6 @@ public class JooqLinkDao {
             .fetchInto(LinkDto.class);
     }
 
-    @Transactional
     public void updateCheck(LinkDto linkDto) {
         dslContext
             .update(LINK)
@@ -66,7 +60,6 @@ public class JooqLinkDao {
             .execute();
     }
 
-    @Transactional
     public void updateModification(OffsetDateTime lastUpdate, LinkDto linkDto) {
         dslContext
             .update(LINK)

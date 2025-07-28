@@ -7,27 +7,21 @@ import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
 import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
+import jakarta.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Transactional
 public class JdbcLinkUpdater implements LinkUpdater {
-
-    private final GitHubClient gitHubClient;
-    private final StackOverflowClient stackOverflowClient;
-    private final JdbcLinkDao jdbcLinkDao;
-    private final JdbcChatToLinkDao jdbcChatToLinkDao;
-
-    public JdbcLinkUpdater(
-        GitHubClient gitHubClient,
-        StackOverflowClient stackOverflowClient,
-        JdbcLinkDao jdbcLinkDao,
-        JdbcChatToLinkDao jdbcChatToLinkDao
-    ) {
-        this.gitHubClient = gitHubClient;
-        this.stackOverflowClient = stackOverflowClient;
-        this.jdbcLinkDao = jdbcLinkDao;
-        this.jdbcChatToLinkDao = jdbcChatToLinkDao;
-    }
+    GitHubClient gitHubClient;
+    StackOverflowClient stackOverflowClient;
+    JdbcLinkDao jdbcLinkDao;
+    JdbcChatToLinkDao jdbcChatToLinkDao;
 
     @Override
     public List<LinkUpdate> update() { // TODO if modified rewrite db record
@@ -60,7 +54,8 @@ public class JdbcLinkUpdater implements LinkUpdater {
                 }
                 return false;
             })
-            .map(link -> new LinkUpdate(link.id(), link.name(),
+            .map(link -> new LinkUpdate(
+                link.id(), link.name(),
                 jdbcChatToLinkDao.findByLinkId(link.id()).stream().map(ChatToLinkDto::chatId).toList()
             ))
             .toList();

@@ -4,19 +4,18 @@ import edu.java.scrapper.domain.jdbc.ChatDto;
 import edu.java.scrapper.domain.jooq.tables.Chat;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JooqChatDao {
-    private static final Chat CHAT = Chat.CHAT;
-    private final DSLContext dslContext;
+    static Chat CHAT = Chat.CHAT;
+    DSLContext dslContext;
 
-    @Autowired
-    public JooqChatDao(DSLContext dslContext) {
-        this.dslContext = dslContext;
-    }
-
-    @Transactional
     public void add(ChatDto chatDto) {
         dslContext
             .insertInto(CHAT)
@@ -24,7 +23,6 @@ public class JooqChatDao {
             .execute();
     }
 
-    @Transactional
     public void remove(long chatId) {
         dslContext
             .deleteFrom(CHAT)
@@ -32,7 +30,6 @@ public class JooqChatDao {
             .execute();
     }
 
-    @Transactional
     public List<ChatDto> findAll() {
         return dslContext
             .select()

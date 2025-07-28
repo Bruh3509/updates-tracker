@@ -5,21 +5,20 @@ import edu.java.scrapper.domain.jooq.tables.ChatToLink;
 import edu.java.scrapper.dto.scrapper.Link;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JooqChatToLinkDao {
-    private static final ChatToLink CHAT_TO_LINK = ChatToLink.CHAT_TO_LINK;
-    private static final edu.java.scrapper.domain.jooq.tables.Link LINK
+    static ChatToLink CHAT_TO_LINK = ChatToLink.CHAT_TO_LINK;
+    static edu.java.scrapper.domain.jooq.tables.Link LINK
         = edu.java.scrapper.domain.jooq.tables.Link.LINK;
-    private final DSLContext dslContext;
+    DSLContext dslContext;
 
-    @Autowired
-    public JooqChatToLinkDao(DSLContext dslContext) {
-        this.dslContext = dslContext;
-    }
-
-    @Transactional
     public void add(ChatToLinkDto chatToLinkDto) {
         dslContext
             .insertInto(CHAT_TO_LINK)
@@ -28,7 +27,6 @@ public class JooqChatToLinkDao {
             .execute();
     }
 
-    @Transactional
     public void remove(long chatId, long linkId) {
         dslContext
             .deleteFrom(CHAT_TO_LINK)
@@ -37,7 +35,6 @@ public class JooqChatToLinkDao {
             .execute();
     }
 
-    @Transactional
     public List<Link> listAll(long chatId) {
         return dslContext
             .select(LINK.LINK_ID, LINK.LINK_NAME)
@@ -47,7 +44,6 @@ public class JooqChatToLinkDao {
             .fetchInto(Link.class);
     }
 
-    @Transactional
     public List<Long> findByLinkId(long linkId) {
         return dslContext
             .select(CHAT_TO_LINK.CHAT_ID)

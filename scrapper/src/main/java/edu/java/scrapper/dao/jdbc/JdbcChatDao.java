@@ -2,36 +2,32 @@ package edu.java.scrapper.dao.jdbc;
 
 import edu.java.scrapper.domain.jdbc.ChatDto;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @SuppressWarnings({"MultipleStringLiterals"})
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class JdbcChatDao implements JdbcDao<ChatDto> {
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public JdbcChatDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    JdbcTemplate jdbcTemplate;
 
     @Override
-    @Transactional
     public void add(ChatDto chatDto) {
         String sql = "INSERT INTO chat(chat_id, user_name) VALUES(?,?) ON CONFLICT DO NOTHING";
         jdbcTemplate.update(sql, chatDto.id(), chatDto.name());
     }
 
     @Override
-    @Transactional
     public void remove(long id) {
         String sql = "DELETE FROM chat WHERE chat_id=?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
-    @Transactional
     public List<ChatDto> findAll() {
         String sql = "SELECT * FROM chat";
         return jdbcTemplate.query(
@@ -45,7 +41,6 @@ public class JdbcChatDao implements JdbcDao<ChatDto> {
     }
 
     @Override
-    @Transactional
     public List<ChatDto> findAll(long id) {
         String sql = "SELECT * FROM chat WHERE chat_id=?";
         return jdbcTemplate.query(
