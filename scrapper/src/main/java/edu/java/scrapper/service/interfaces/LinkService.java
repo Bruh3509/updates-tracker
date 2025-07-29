@@ -1,6 +1,6 @@
 package edu.java.scrapper.service.interfaces;
 
-import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.dto.scrapper.LinkDto;
 import java.net.URI;
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface LinkService {
 
     void remove(long tgChatId, long linkId);
 
-    List<Link> listAll(long tgChatId);
+    List<LinkDto> listAll(long tgChatId);
 
     /*default long linkId(URI url) {
         return url.toString().hashCode();

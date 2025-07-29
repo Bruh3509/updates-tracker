@@ -21,7 +21,7 @@ public class StackOverflowTest {
         assertFalse(client
             .getQuestionById(78039352, "stackoverflow")
             .getBody()
-            .items()
+            .itemDtos()
             .getFirst()
             .isAnswered());
     }

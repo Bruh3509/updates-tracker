@@ -4,7 +4,7 @@ import edu.java.scrapper.clients.GitHubClient;
 import edu.java.scrapper.clients.StackOverflowClient;
 import edu.java.scrapper.dao.jdbc.JdbcChatToLinkDao;
 import edu.java.scrapper.dao.jdbc.JdbcLinkDao;
-import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
+import edu.java.scrapper.domain.jdbc.ChatToLink;
 import edu.java.scrapper.dto.bot.LinkUpdate;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import jakarta.transaction.Transactional;
@@ -44,7 +44,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
                     var response
                         = stackOverflowClient.getQuestionById(Integer.parseInt(pathComponents[2]), SITE);
                     var lastUpdate = response.getBody()
-                        .items()
+                        .itemDtos()
                         .getFirst()
                         .lastActDate();
                     if (lastUpdate.isAfter(link.lastUpdate())) {
@@ -56,7 +56,7 @@ public class JdbcLinkUpdater implements LinkUpdater {
             })
             .map(link -> new LinkUpdate(
                 link.id(), link.name(),
-                jdbcChatToLinkDao.findByLinkId(link.id()).stream().map(ChatToLinkDto::chatId).toList()
+                jdbcChatToLinkDao.findByLinkId(link.id()).stream().map(ChatToLink::chatId).toList()
             ))
             .toList();
     }

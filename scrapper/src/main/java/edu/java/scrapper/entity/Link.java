@@ -29,7 +29,8 @@ public class Link {
     @Column(name = "last_update")
     private OffsetDateTime lastUpdate;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "followingLinks")
+    @ManyToMany(mappedBy = "followingLinks",
+                cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<Chat> followingChats = new ArrayList<>();
 
     public Link() {

@@ -1,6 +1,6 @@
 package edu.java.scrapper.clients;
 
-import edu.java.scrapper.dto.stackoverflow.Items;
+import edu.java.scrapper.dto.stackoverflow.ItemsDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -14,7 +14,7 @@ public interface StackOverflowClient {
                retryFor = {HttpServerErrorException.InternalServerError.class},
                backoff = @Backoff(delayExpression = "${app.retry.delay}",
                                   multiplierExpression = "${app.retry.exponential}"))
-    ResponseEntity<Items> getQuestionById(
+    ResponseEntity<ItemsDto> getQuestionById(
         @PathVariable Integer id,
         @PathVariable String site
     );

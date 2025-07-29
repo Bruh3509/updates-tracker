@@ -1,23 +1,22 @@
 package edu.java.scrapper.dao.jdbc;
 
-import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
+import edu.java.scrapper.domain.jdbc.ChatToLink;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings({"MultipleStringLiterals"})
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class JdbcChatToLinkDao implements JdbcDao<ChatToLinkDto> {
+public class JdbcChatToLinkDao implements JdbcDao<ChatToLink> {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void add(ChatToLinkDto chatToLinkDto) {
+    public void add(ChatToLink chatToLink) {
         String sql = "INSERT INTO chat_to_link(chat_id, link_id) VALUES(?,?)";
-        jdbcTemplate.update(sql, chatToLinkDto.chatId(), chatToLinkDto.linkId());
+        jdbcTemplate.update(sql, chatToLink.chatId(), chatToLink.linkId());
     }
 
     @Override
@@ -31,12 +30,12 @@ public class JdbcChatToLinkDao implements JdbcDao<ChatToLinkDto> {
         jdbcTemplate.update(sql, chatId, linkId);
     }
 
-    public List<ChatToLinkDto> findByLinkId(long linkId) {
+    public List<ChatToLink> findByLinkId(long linkId) {
         String sql = "SELECT * FROM chat_to_link WHERE link_id=?";
         return jdbcTemplate.query(
             sql,
             (resultSet, rowNum) ->
-                new ChatToLinkDto(
+                new ChatToLink(
                     resultSet.getLong("chat_id"),
                     resultSet.getLong("link_id")
                 ),
@@ -45,12 +44,12 @@ public class JdbcChatToLinkDao implements JdbcDao<ChatToLinkDto> {
     }
 
     @Override
-    public List<ChatToLinkDto> findAll() {
+    public List<ChatToLink> findAll() {
         String sql = "SELECT * FROM chat_to_link";
         return jdbcTemplate.query(
             sql,
             (resultSet, rowNum) ->
-                new ChatToLinkDto(
+                new ChatToLink(
                     resultSet.getLong("chat_id"),
                     resultSet.getLong("link_id")
                 )
@@ -58,12 +57,12 @@ public class JdbcChatToLinkDao implements JdbcDao<ChatToLinkDto> {
     }
 
     @Override
-    public List<ChatToLinkDto> findAll(long id) {
+    public List<ChatToLink> findAll(long id) {
         String sql = "SELECT * FROM chat_to_link WHERE chat_id=?";
         return jdbcTemplate.query(
             sql,
             (resultSet, rowNum) ->
-                new ChatToLinkDto(
+                new ChatToLink(
                     resultSet.getLong("chat_id"),
                     resultSet.getLong("link_id")
                 ),

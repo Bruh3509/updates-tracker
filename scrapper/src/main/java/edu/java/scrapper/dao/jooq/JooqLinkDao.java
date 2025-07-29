@@ -1,8 +1,6 @@
 package edu.java.scrapper.dao.jooq;
 
-import edu.java.scrapper.domain.jdbc.LinkDto;
-import edu.java.scrapper.domain.jooq.tables.Link;
-import jakarta.transaction.Transactional;
+import edu.java.scrapper.domain.jdbc.Link;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.AccessLevel;
@@ -14,17 +12,17 @@ import org.jooq.DSLContext;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class JooqLinkDao {
-    static Link LINK = Link.LINK;
+    static edu.java.scrapper.domain.jooq.tables.Link LINK = edu.java.scrapper.domain.jooq.tables.Link.LINK;
     DSLContext dslContext;
 
-    public void add(LinkDto linkDto) {
+    public void add(Link link) {
         dslContext
             .insertInto(LINK)
             .values(
-                linkDto.id(),
-                linkDto.name(),
-                linkDto.curTime(),
-                linkDto.lastUpdate()
+                link.id(),
+                link.name(),
+                link.curTime(),
+                link.lastUpdate()
             )
             .onConflictDoNothing()
             .execute();
@@ -37,34 +35,34 @@ public class JooqLinkDao {
             .execute();
     }
 
-    public List<LinkDto> findAll() {
+    public List<Link> findAll() {
         return dslContext
             .select()
             .from(LINK)
-            .fetchInto(LinkDto.class);
+            .fetchInto(Link.class);
     }
 
-    public List<LinkDto> findAll(long id) {
+    public List<Link> findAll(long id) {
         return dslContext
             .select()
             .from(LINK)
             .where(LINK.LINK_ID.eq(id))
-            .fetchInto(LinkDto.class);
+            .fetchInto(Link.class);
     }
 
-    public void updateCheck(LinkDto linkDto) {
+    public void updateCheck(Link link) {
         dslContext
             .update(LINK)
             .set(LINK.LAST_CHECK, System.currentTimeMillis())
-            .where(LINK.LINK_ID.eq(linkDto.id()))
+            .where(LINK.LINK_ID.eq(link.id()))
             .execute();
     }
 
-    public void updateModification(OffsetDateTime lastUpdate, LinkDto linkDto) {
+    public void updateModification(OffsetDateTime lastUpdate, Link link) {
         dslContext
             .update(LINK)
             .set(LINK.LAST_UPDATE, lastUpdate)
-            .where(LINK.LINK_ID.eq(linkDto.id()))
+            .where(LINK.LINK_ID.eq(link.id()))
             .execute();
     }
 }

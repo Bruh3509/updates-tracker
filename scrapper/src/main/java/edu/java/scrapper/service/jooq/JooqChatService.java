@@ -1,21 +1,22 @@
 package edu.java.scrapper.service.jooq;
 
 import edu.java.scrapper.dao.jooq.JooqChatDao;
-import edu.java.scrapper.domain.jdbc.ChatDto;
+import edu.java.scrapper.domain.jdbc.Chat;
 import edu.java.scrapper.service.interfaces.ChatService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.transaction.annotation.Transactional;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Transactional
 public class JooqChatService implements ChatService {
-    private final JooqChatDao jooqChatDao;
-
-
-    public JooqChatService(JooqChatDao jooqChatDao) {
-        this.jooqChatDao = jooqChatDao;
-    }
+    JooqChatDao jooqChatDao;
 
     @Override
     public void register(long chatId, String userName) {
-        jooqChatDao.add(new ChatDto(chatId, userName));
+        jooqChatDao.add(new Chat(chatId, userName));
     }
 
     @Override

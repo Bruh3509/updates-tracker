@@ -1,27 +1,26 @@
-package edu.java.scrapper.service.jpa;
+package edu.java.scrapper.service.hibernate;
 
-import edu.java.scrapper.dao.jpa.ChatRepository;
+import edu.java.scrapper.dao.hibernate.HibernateChatDao;
 import edu.java.scrapper.entity.Chat;
 import edu.java.scrapper.service.interfaces.ChatService;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Transactional
-public class JpaChatService implements ChatService {
-    ChatRepository chatRepository;
+public class HibernateChatService implements ChatService {
+    HibernateChatDao chatDao;
 
     @Override
     public void register(long chatId, String userName) {
-        chatRepository.save(new Chat(chatId, userName));
+        chatDao.add(new Chat(chatId, userName));
     }
 
     @Override
     public void unregister(long chatId) {
-        chatRepository.deleteById(chatId);
+        chatDao.remove(chatId);
     }
 }

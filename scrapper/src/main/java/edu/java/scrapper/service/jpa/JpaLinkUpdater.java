@@ -8,23 +8,18 @@ import edu.java.scrapper.entity.Chat;
 import edu.java.scrapper.service.interfaces.LinkUpdater;
 import java.net.URI;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.transaction.annotation.Transactional;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Transactional
 public class JpaLinkUpdater implements LinkUpdater {
-    private final GitHubClient gitHubClient;
-    private final StackOverflowClient stackOverflowClient;
-    private final LinkRepository linkRepository;
-
-
-    public JpaLinkUpdater(
-        GitHubClient gitHubClient,
-        StackOverflowClient stackOverflowClient,
-        LinkRepository linkRepository
-    ) {
-        this.gitHubClient = gitHubClient;
-        this.stackOverflowClient = stackOverflowClient;
-        this.linkRepository = linkRepository;
-    }
+    GitHubClient gitHubClient;
+    StackOverflowClient stackOverflowClient;
+    LinkRepository linkRepository;
 
     @Override
     public List<LinkUpdate> update() {
@@ -47,7 +42,7 @@ public class JpaLinkUpdater implements LinkUpdater {
                     var response
                         = stackOverflowClient.getQuestionById(Integer.parseInt(pathComponents[2]), SITE);
                     var lastUpdate = response.getBody()
-                        .items()
+                        .itemDtos()
                         .getFirst()
                         .lastActDate();
                     if (lastUpdate.isAfter(link.getLastUpdate())) {

@@ -1,28 +1,26 @@
 package edu.java.scrapper.dao.jooq;
 
-import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
-import edu.java.scrapper.domain.jooq.tables.ChatToLink;
-import edu.java.scrapper.dto.scrapper.Link;
-import jakarta.transaction.Transactional;
+import edu.java.scrapper.domain.jdbc.ChatToLink;
+import edu.java.scrapper.dto.scrapper.LinkDto;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JooqChatToLinkDao {
-    static ChatToLink CHAT_TO_LINK = ChatToLink.CHAT_TO_LINK;
+    static edu.java.scrapper.domain.jooq.tables.ChatToLink
+        CHAT_TO_LINK = edu.java.scrapper.domain.jooq.tables.ChatToLink.CHAT_TO_LINK;
     static edu.java.scrapper.domain.jooq.tables.Link LINK
         = edu.java.scrapper.domain.jooq.tables.Link.LINK;
     DSLContext dslContext;
 
-    public void add(ChatToLinkDto chatToLinkDto) {
+    public void add(ChatToLink chatToLink) {
         dslContext
             .insertInto(CHAT_TO_LINK)
-            .values(chatToLinkDto.chatId(), chatToLinkDto.linkId())
+            .values(chatToLink.chatId(), chatToLink.linkId())
             .onConflictDoNothing()
             .execute();
     }
@@ -35,13 +33,13 @@ public class JooqChatToLinkDao {
             .execute();
     }
 
-    public List<Link> listAll(long chatId) {
+    public List<LinkDto> listAll(long chatId) {
         return dslContext
             .select(LINK.LINK_ID, LINK.LINK_NAME)
             .from(CHAT_TO_LINK.innerJoin(LINK)
                 .on(CHAT_TO_LINK.LINK_ID.eq(LINK.LINK_ID)))
             .where(CHAT_TO_LINK.CHAT_ID.eq(chatId))
-            .fetchInto(Link.class);
+            .fetchInto(LinkDto.class);
     }
 
     public List<Long> findByLinkId(long linkId) {

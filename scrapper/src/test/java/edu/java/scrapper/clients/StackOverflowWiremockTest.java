@@ -81,7 +81,7 @@ public class StackOverflowWiremockTest {
     @Test
     void testWireMock() {
         Assertions.assertTrue(wireMockServer.isRunning());
-        var items = client.getQuestionById(1, "stackoverflow").getBody().items();
+        var items = client.getQuestionById(1, "stackoverflow").getBody().itemDtos();
         Assertions.assertTrue(items.getFirst().isAnswered());
         assertThat(items.getFirst().viewCount()).isEqualTo(43);
     }

@@ -2,16 +2,22 @@ package edu.java.scrapper.service.jooq;
 
 import edu.java.scrapper.dao.jooq.JooqChatToLinkDao;
 import edu.java.scrapper.dao.jooq.JooqLinkDao;
-import edu.java.scrapper.domain.jdbc.ChatToLinkDto;
-import edu.java.scrapper.domain.jdbc.LinkDto;
-import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.domain.jdbc.ChatToLink;
+import edu.java.scrapper.domain.jdbc.Link;
+import edu.java.scrapper.dto.scrapper.LinkDto;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.transaction.annotation.Transactional;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
+@Transactional
 public class JooqLinkService implements LinkService {
     private final JooqLinkDao linkDao;
     private final JooqChatToLinkDao chatToLinkDao;
@@ -25,7 +31,7 @@ public class JooqLinkService implements LinkService {
     @Override
     public void add(long tgChatId, long linkId, URI url) {
         // adding link if not exists to LINK table
-        linkDao.add(new LinkDto(
+        linkDao.add(new Link(
             linkId,
             url.toString(),
             System.currentTimeMillis(),
@@ -33,7 +39,7 @@ public class JooqLinkService implements LinkService {
         ));
 
         // adding link to CHAT_TO_LINK relation
-        chatToLinkDao.add(new ChatToLinkDto(tgChatId, linkId));
+        chatToLinkDao.add(new ChatToLink(tgChatId, linkId));
     }
 
     @Override
@@ -43,7 +49,7 @@ public class JooqLinkService implements LinkService {
     }
 
     @Override
-    public List<Link> listAll(long tgChatId) {
+    public List<LinkDto> listAll(long tgChatId) {
         return chatToLinkDao.listAll(tgChatId);
     }
 }

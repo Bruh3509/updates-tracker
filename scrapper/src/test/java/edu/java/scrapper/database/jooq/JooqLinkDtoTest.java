@@ -2,7 +2,7 @@ package edu.java.scrapper.database.jooq;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.dao.jooq.JooqChatDao;
-import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.dto.scrapper.LinkDto;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
 import jakarta.transaction.Transactional;
@@ -17,7 +17,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class JooqLinkTest extends IntegrationTest {
+public class JooqLinkDtoTest extends IntegrationTest {
     @DynamicPropertySource
     static void setJooqAccessType(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jooq");
@@ -39,7 +39,7 @@ public class JooqLinkTest extends IntegrationTest {
         chatService.register(42, "default");
         linkService.add(42, link.hashCode(), URI.create(link));
         assertThat(linkService.listAll(42))
-            .containsExactly(new Link((long) link.hashCode(), URI.create(link)));
+            .containsExactly(new LinkDto((long) link.hashCode(), URI.create(link)));
 
         linkService.remove(42, link.hashCode());
         assertThat(linkService.listAll(42)).isEmpty();
@@ -55,7 +55,7 @@ public class JooqLinkTest extends IntegrationTest {
         linkService.add(41, link.hashCode(), URI.create(link));
         linkService.remove(42, link.hashCode());
         assertThat(linkService.listAll(41))
-            .containsExactly(new Link((long) link.hashCode(), URI.create(link)));
+            .containsExactly(new LinkDto((long) link.hashCode(), URI.create(link)));
     }
 
     @Test
@@ -69,6 +69,6 @@ public class JooqLinkTest extends IntegrationTest {
         linkService.add(42, git.hashCode(), URI.create(git));
         linkService.remove(42, stack.hashCode());
         assertThat(linkService.listAll(42))
-            .containsExactly(new Link((long) git.hashCode(), URI.create(git)));
+            .containsExactly(new LinkDto((long) git.hashCode(), URI.create(git)));
     }
 }

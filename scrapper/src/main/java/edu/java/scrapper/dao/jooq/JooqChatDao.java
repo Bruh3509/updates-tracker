@@ -1,25 +1,22 @@
 package edu.java.scrapper.dao.jooq;
 
-import edu.java.scrapper.domain.jdbc.ChatDto;
-import edu.java.scrapper.domain.jooq.tables.Chat;
-import jakarta.transaction.Transactional;
+import edu.java.scrapper.domain.jdbc.Chat;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JooqChatDao {
-    static Chat CHAT = Chat.CHAT;
+    static edu.java.scrapper.domain.jooq.tables.Chat CHAT = edu.java.scrapper.domain.jooq.tables.Chat.CHAT;
     DSLContext dslContext;
 
-    public void add(ChatDto chatDto) {
+    public void add(Chat chat) {
         dslContext
             .insertInto(CHAT)
-            .values(chatDto.id(), chatDto.name())
+            .values(chat.id(), chat.name())
             .execute();
     }
 
@@ -30,10 +27,10 @@ public class JooqChatDao {
             .execute();
     }
 
-    public List<ChatDto> findAll() {
+    public List<Chat> findAll() {
         return dslContext
             .select()
             .from(CHAT)
-            .fetchInto(ChatDto.class);
+            .fetchInto(Chat.class);
     }
 }

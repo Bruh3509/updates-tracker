@@ -2,7 +2,7 @@ package edu.java.scrapper.database.jpa;
 
 import edu.java.scrapper.IntegrationTest;
 import edu.java.scrapper.dao.jpa.ChatRepository;
-import edu.java.scrapper.dto.scrapper.Link;
+import edu.java.scrapper.dto.scrapper.LinkDto;
 import edu.java.scrapper.service.interfaces.ChatService;
 import edu.java.scrapper.service.interfaces.LinkService;
 import java.net.URI;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class JpaLinkTest extends IntegrationTest {
+public class JpaLinkDtoTest extends IntegrationTest {
     @DynamicPropertySource
     static void setJpaAccessType(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jpa");
@@ -38,7 +38,7 @@ public class JpaLinkTest extends IntegrationTest {
         var link = "http://foreach.com";
         chatService.register(42, "default");
         linkService.add(42, link.hashCode(), URI.create(link));
-        assertThat(linkService.listAll(42)).containsExactly(new Link(
+        assertThat(linkService.listAll(42)).containsExactly(new LinkDto(
             (long) link.hashCode(),
             URI.create(link)
         ));
@@ -55,7 +55,7 @@ public class JpaLinkTest extends IntegrationTest {
         chatService.register(41, "default");
         linkService.add(41, link.hashCode(), URI.create(link));
         linkService.remove(42, link.hashCode());
-        assertThat(linkService.listAll(41)).containsExactly(new Link(
+        assertThat(linkService.listAll(41)).containsExactly(new LinkDto(
             (long) link.hashCode(),
             URI.create(link)
         ));
@@ -71,7 +71,7 @@ public class JpaLinkTest extends IntegrationTest {
         chatService.register(42, "default");
         linkService.add(42, git.hashCode(), URI.create(git));
         linkService.remove(42, stack.hashCode());
-        assertThat(linkService.listAll(42)).containsExactly(new Link(
+        assertThat(linkService.listAll(42)).containsExactly(new LinkDto(
             (long) git.hashCode(),
             URI.create(git)
         ));

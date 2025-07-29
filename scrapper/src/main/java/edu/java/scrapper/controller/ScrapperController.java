@@ -96,7 +96,7 @@ public class ScrapperController {
 
         if (bucket.tryConsume(1)) {
             log.info("Adding link");
-            var link = request.link().url();
+            var link = request.linkDto().url();
             linkService.add(id, link.toString().hashCode(), link);
             return new ResponseEntity<>(
                 new ScrapperPostResponse(id, link),
@@ -115,9 +115,9 @@ public class ScrapperController {
         Bucket bucket = getBucket(String.valueOf(id));
 
         if (bucket.tryConsume(1)) {
-            linkService.remove(id, link.link().url().toString().hashCode());
+            linkService.remove(id, link.linkDto().url().toString().hashCode());
             return new ResponseEntity<>(
-                new ScrapperDeleteResponse(id, link.link().url()),
+                new ScrapperDeleteResponse(id, link.linkDto().url()),
                 HttpStatus.OK
             );
         }
