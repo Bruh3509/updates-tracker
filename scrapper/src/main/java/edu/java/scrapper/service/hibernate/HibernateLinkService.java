@@ -51,7 +51,6 @@ public class HibernateLinkService implements LinkService {
         linkO.getFollowingChats().remove(chatO);
     }
 
-    // TODO verify
     @Override
     public List<LinkDto> listAll(long tgChatId) {
         var chatO = chatDao.findById(tgChatId)

@@ -1,13 +1,18 @@
 package edu.java.scrapper.configuration;
 
-
-
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties;
+import edu.java.scrapper.clients.GitHubClient;
+import edu.java.scrapper.clients.StackOverflowClient;
+import edu.java.scrapper.dao.hibernate.HibernateChatDao;
+import edu.java.scrapper.dao.hibernate.HibernateLinkDao;
+import edu.java.scrapper.service.factory.ProcessFactory;
+import edu.java.scrapper.service.hibernate.HibernateChatService;
+import edu.java.scrapper.service.hibernate.HibernateLinkService;
+import edu.java.scrapper.service.hibernate.HibernateLinkUpdater;
+import java.util.Properties;
+import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 public class HibernateConfig {
@@ -29,5 +34,39 @@ public class HibernateConfig {
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 
         return hibernateProperties;
+    }
+
+    @Bean
+    public HibernateLinkDao linkDao(LocalSessionFactoryBean sessionFactory) {
+        return new HibernateLinkDao(sessionFactory.getObject());
+    }
+
+    @Bean
+    public HibernateChatDao chatDao(LocalSessionFactoryBean sessionFactory) {
+        return new HibernateChatDao(sessionFactory.getObject());
+    }
+
+    @Bean
+    public HibernateChatService chatService(HibernateChatDao chatDao) {
+        return new HibernateChatService(chatDao);
+    }
+
+    @Bean
+    public HibernateLinkService linkService(HibernateLinkDao linkDao, HibernateChatDao chatDao) {
+        return new HibernateLinkService(linkDao, chatDao);
+    }
+
+    @Bean
+    public HibernateLinkUpdater hibernateLinkUpdater(HibernateLinkDao linkDao, ProcessFactory processFactory) {
+        return new HibernateLinkUpdater(linkDao, processFactory);
+    }
+
+    @Bean
+    public ProcessFactory processFactory(
+        GitHubClient github,
+        StackOverflowClient stackoverflow,
+        HibernateLinkDao linkDao
+    ) {
+        return new ProcessFactory(github, stackoverflow, linkDao);
     }
 }

@@ -13,6 +13,8 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import static edu.java.scrapper.service.interfaces.LinkUpdater.SITE.GITHUB;
+import static edu.java.scrapper.service.interfaces.LinkUpdater.SITE.STACK;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -33,16 +35,16 @@ public class JdbcLinkUpdater implements LinkUpdater {
                 var uri = URI.create(name);
                 String[] pathComponents = uri.getPath().split("/");
                 jdbcLinkDao.updateCheck(link);
-                if (name.startsWith(GITHUB)) {
+                if (name.startsWith(GITHUB.name())) {
                     var response = gitHubClient.getRepository(pathComponents[1], pathComponents[2]);
                     var lastUpdate = response.getBody().pushDate();
                     if (lastUpdate.isAfter(link.lastUpdate())) {
                         jdbcLinkDao.updateModification(lastUpdate, link);
                         return true;
                     }
-                } else if (name.startsWith(STACK)) {
+                } else if (name.startsWith(STACK.name())) {
                     var response
-                        = stackOverflowClient.getQuestionById(Integer.parseInt(pathComponents[2]), SITE);
+                        = stackOverflowClient.getQuestionById(Integer.parseInt(pathComponents[2]), PARSE.SITE.name());
                     var lastUpdate = response.getBody()
                         .itemDtos()
                         .getFirst()
